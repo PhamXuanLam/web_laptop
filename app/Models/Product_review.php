@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Product_review extends Model
 {
     use HasFactory;
+    
+    protected $table = "product_reviews";
+
+    protected $fillable = ['id', 'customer_id', 'product_id', 'comment', 'rate', 'created_at', 'updated_at'];
+    protected $primaryKey = 'id';
+
+    public $timestamps = true;
 }
