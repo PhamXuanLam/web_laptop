@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string("password");
             $table->string("role", 10);
             $table->integer("status");
-            $table->string('first_name', 20);
-            $table->string('last_name', 20);
-            $table->date('birth_day');
+            $table->string('first_name', 20)->nullable();
+            $table->string('last_name', 20)->nullable();
+            $table->date('birth_day')->nullable();
             $table->string('email', 100)->uniqid();
             $table->string('phone', 20)->uniqid();
             $table->string('avatar')->nullable();
