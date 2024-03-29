@@ -15,13 +15,11 @@ class CategoryFactory extends Factory
      * @return array<string, mixed>
      */
     public function definition(): array
-    {  $roleList = ["ADMIN", "CUSTOMER", "EMPLOYEE"];
-
+    {  
         return [
-
-            'name' => fake()->name(),
-            'slug' => fake()->slug(),
-            "status" => random_int(0, 1)
+            "name" => fake()->name(),
+            "slug" => fake()->slug(),
+            "status" => random_int(0, 1),
         ];
     }
 }
