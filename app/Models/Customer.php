@@ -9,6 +9,8 @@ class Customer extends Model
 {
     use HasFactory;
 
+    const CUSTOMER_ROLE = "CUSTOMER";
+
     protected $table = 'customers';
 
     protected $fillable = ['id', 'account_id', 'address_id', 'created_at', 'updated_at'];

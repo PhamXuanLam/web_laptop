@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('status', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('account_id');
-            $table->unsignedInteger('address_id')->nullable();
+            $table->integer("status");
+            $table->unsignedInteger("account_id");
+            $table->date("time_in");
+            $table->date("time_out");
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('status');
     }
 };

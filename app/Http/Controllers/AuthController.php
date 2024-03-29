@@ -5,26 +5,31 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Account;
-use App\Models\Customer;
+use App\Service\AccountService;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+    protected AccountService $accountService;
+
+    public function __construct(AccountService $accountService)
+    {
+        $this->accountService = $accountService;
+    }
+    
     public function register(RegisterRequest $request) 
     {
-       $params = $request->only([
-            'username',
-            'password',
-            'email',
-            'birth_day',
-            'first_name',
-            'last_name',
-            'phone',
-            'avatar'
+        $params = $request->only([
+            'username', 'email', 'role',
+            'first_name', 'last_name',
+            'birth_day', 'avatar',
+            'phone', 'password', 
         ]);
-
-        $customer = new Customer();
         
+        $account = $this->accountService->storeAccount($params, new Account());
+        
+        return response()->json($account);
     }
 
     public function login(LoginRequest $request) 
@@ -36,26 +41,13 @@ class AuthController extends Controller
             "password" => $request->password
         ])) {
             $account = Auth::guard('account')->user();
-            
-            if($account->status === Account::STATUS_ACTIVE) {
-
-                $response["status"] = true;
-                $response["message"] = "Login successfully!";
-                $response["token"] = $account->createToken('myToken')->accessToken;    
-                $response["role"] = $account->role;
-
-            } else {
-
-                $response["status"] = false;
-                $response["message"] = "Account inactive!";
-
-            }
-           
+            $response["status"] = true;
+            $response["message"] = "Login successfully!";
+            $response["token"] = $account->createToken('myToken')->accessToken;    
+            $response["role"] = $account->role;
         } else {
-            
             $response["status"] = false;
             $response["message"] = "Username or password not correct!";
-
         }
 
         return response()->json($response);
