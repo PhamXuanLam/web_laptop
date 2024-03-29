@@ -31,7 +31,6 @@ class AccountFactory extends Factory
             'email' => fake()->email(),
             'phone' => fake()->phoneNumber(),
             'avatar' => time() . '.png',
-            "status" => random_int(0, 1),
             "role" => Arr::random($roleList),
         ];
     }

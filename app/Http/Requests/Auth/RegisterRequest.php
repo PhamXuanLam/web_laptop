@@ -24,14 +24,18 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "username" => "required|unique:accounts|max:100",
-            "password" => "required|confirmed",
-            "email" => "required|email:rfc,dns|max:100",
-            "phone" => "required|string|min:10|max:12",
+            "username" => "required|unique:accounts|max:20",
+            "password" => "required|unique:accounts|confirmed",
+            "email" => "required|unique:accounts|email:rfc,dns|max:100",
+            "phone" => "required|unique:accounts|string|min:10|max:12",
             "birth_day" => "nullable|date",
             "avatar" => "nullable",
-            "first_name" => "nullable|string|max:20",
-            "last_name" => "nullable|string|max:20"
+            "first_name" => "required|string|max:20",
+            "last_name" => "required|string|max:20",
+            "province_id" => "nullable|numeric|in:1,96",
+            "district_id" => "nullable|numeric|in:1,973",
+            "commune_id" => "nullable|numeric|in:1,3154",
+            "role" => "nullable|string"
         ];
     }
 

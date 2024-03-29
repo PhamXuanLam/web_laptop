@@ -42,11 +42,10 @@ class Account extends Authenticatable
      */
     protected $fillable = 
     [
-        "id", "username", "password", "status", 'role',
+        "id", "username", "password", 'role',
         'first_name', 'last_name', 'birth_day', 'email',
         'phone', 'avatar', 'created_at', 'updated_at',
     ];
-
     
     protected $table = "accounts";
 
