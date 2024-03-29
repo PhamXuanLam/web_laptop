@@ -15,9 +15,11 @@ class CategoryFactory extends Factory
      * @return array<string, mixed>
      */
     public function definition(): array
-    {
+    {  
         return [
-            //
+            "name" => fake()->name(),
+            "slug" => fake()->slug(),
+            "status" => random_int(0, 1),
         ];
     }
 }
