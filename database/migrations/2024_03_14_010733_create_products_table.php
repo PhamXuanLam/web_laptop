@@ -17,11 +17,13 @@ return new class extends Migration
             $table->string("price");
             $table->string("quantity");
             $table->string("slug");
-            $table->string("status");
-            $table->string("description");
+            $table->integer("status");
             $table->string("avatar");
             $table->string("evaluate");
             $table->string("category_id");
+            $table->string("size");
+            $table->string("color");
+            $table->string("brand");
             $table->timestamps();
         });
     }

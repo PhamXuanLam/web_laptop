@@ -25,7 +25,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             "username" => "required|unique:accounts|max:20",
-            "password" => "required|unique:accounts|confirmed",
+            "password" => "required|confirmed",
             "email" => "required|unique:accounts|email:rfc,dns|max:100",
             "phone" => "required|unique:accounts|string|min:10|max:12",
             "birth_day" => "nullable|date",
