@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Customer;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -28,14 +28,8 @@ class RegisterRequest extends FormRequest
             "password" => "required|confirmed",
             "email" => "required|unique:accounts|email:rfc,dns|max:100",
             "phone" => "required|unique:accounts|string|min:10|max:12",
-            "birth_day" => "nullable|date",
-            "avatar" => "nullable",
             "first_name" => "required|string|max:20",
             "last_name" => "required|string|max:20",
-            "province_id" => "nullable|numeric|in:1,96",
-            "district_id" => "nullable|numeric|in:1,973",
-            "commune_id" => "nullable|numeric|in:1,3154",
-            "role" => "nullable|string"
         ];
     }
 

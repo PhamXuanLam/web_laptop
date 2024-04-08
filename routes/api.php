@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,12 +20,18 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post("register",[AuthController::class, "register"]);
-Route::post("login", [AuthController::class, "login"]);
+/**
+ * Auth Route
+ */
+Route::post("/login", [AuthController::class, "login"]);
+Route::get("/logout", [AuthController::class, "logout"])->middleware("auth:account_api");
 
-Route::group([
-    "middleware" => ["auth:account_api"]
-], function() {
-    Route::get("show", [AuthController::class, "show"]);
-    Route::get("logout", [AuthController::class, "logout"]);
+/**
+ * Customer Route
+ */
+Route::prefix("/customer")->group(function() {
+    Route::post("/register",[CustomerController::class, "register"]);
+
+    Route::get("/show", [CustomerController::class, "show"])->middleware("auth:account_api");
 });
+
