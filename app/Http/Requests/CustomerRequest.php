@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Auth;
 
-class RegisterRequest extends FormRequest
+class CustomerRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,20 +24,26 @@ class RegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            "username" => "required|unique:accounts|max:20",
-            "password" => "required|confirmed",
-            "email" => "required|unique:accounts|email:rfc,dns|max:100",
-            "phone" => "required|unique:accounts|string|min:10|max:12",
-            "birth_day" => "nullable|date",
-            "avatar" => "nullable",
+        $rules = [
+            "username" => "required|max:20|unique:accounts,username," . Auth::id(),
+            "email" => "required|email:rfc,dns|max:100|unique:accounts,email," . Auth::id(),
+            "phone" => "required|string|min:10|max:12|unique:accounts,phone," . Auth::id(),
             "first_name" => "required|string|max:20",
             "last_name" => "required|string|max:20",
-            "province_id" => "nullable|numeric|in:1,96",
-            "district_id" => "nullable|numeric|in:1,973",
-            "commune_id" => "nullable|numeric|in:1,3154",
-            "role" => "nullable|string"
+            'birth_day' => "nullable|date",
+            'avatar' => "nullable|image|mimes:jpeg,png,jpg,gif|max:2048", 
+            'role'=> "nullable|string",
+            'province_id' => "nullable|numeric|exists:provinces,id", 
+            'district_id' => "nullable|numeric|exists:districts,id", 
+            'commune_id' => "nullable|numeric|exists:communes,id"
         ];
+    
+        // Kiểm tra nếu là "đăng ký" thì thêm quy tắc cho trường "password"
+        if ($this->isMethod('post')) {
+            $rules['password'] = 'required|confirmed';
+        }
+    
+        return $rules;
     }
 
     // public function attributes()
