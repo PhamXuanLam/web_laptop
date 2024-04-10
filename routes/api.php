@@ -33,5 +33,6 @@ Route::prefix("/customer")->group(function() {
     Route::post("/register",[CustomerController::class, "register"]);
 
     Route::get("/show", [CustomerController::class, "show"])->middleware("auth:account_api");
+    Route::put("/update", [CustomerController::class, "update"])->middleware("auth:account_api");
 });
 

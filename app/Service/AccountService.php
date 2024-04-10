@@ -9,13 +9,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class AccountService {
-
-    protected CustomerService $customerService;
-
-    public function __construct(CustomerService $customerService)
-    {
-        $this->customerService = $customerService;
-    }
     
     public function storeAccount($params, Account $account) 
     {
@@ -28,7 +21,6 @@ class AccountService {
 
             if(isset($params['role']) && $params['role']) {
                 $account->role = $params['role'];
-
             } else {
                 $account->role = Customer::CUSTOMER_ROLE;
             }
@@ -53,22 +45,23 @@ class AccountService {
             $account->save();
             
             if($account->role === Customer::CUSTOMER_ROLE) {
-                $customer = $this->customerService->getCustomerByAccountId($account->id);
+                
+                $customerService = app(CustomerService::class);
+
+                $customer = $customerService->getCustomerByAccountId($account->id);
 
                 if ($customer) {
                     if(isset($province_id) && isset($district_id) && isset($commune_id)) {
-                        $this->customerService->storeCustomer($account->id, $customer, $province_id, $district_id, $commune_id);
+                        $customerService->storeCustomer($account->id, $customer, $province_id, $district_id, $commune_id);
                     } else {
-                        $this->customerService->storeCustomer($account->id, $customer);
+                        $customerService->storeCustomer($account->id, $customer);
                     }
                 } else {
-                    $this->customerService->storeCustomer($account->id, new Customer());
+                    $customerService->storeCustomer($account->id, new Customer());
                 }
             }
             DB::commit();
-            return [
-                "account" => $account, 
-            ];
+            return $account;
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("File: ".$e->getFile().'---Line: '.$e->getLine()."---Message: ".$e->getMessage());
