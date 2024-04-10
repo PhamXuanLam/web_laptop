@@ -18,6 +18,11 @@ class SupplierFactory extends Factory
     {
         return [
             //
+            "name" => fake()->name(),
+            "email" => fake()->email(),
+            "phone" => fake()->phoneNumber(),
+           
+
         ];
     }
 }
