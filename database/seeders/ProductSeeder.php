@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 class ProductSeeder extends Seeder
 {
@@ -15,6 +16,7 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         $categories = Category::query()->select(["*"])->get();
+        $brands = ['Dell', 'HP', 'Lenovo', 'Apple', 'Asus', 'MSI', 'Acer', 'Samsung', 'Microsoft', 'Razer'];
         foreach($categories as $category)
         {   
             $price = fake()->numberBetween(500, 50000) * 2 * 3;
@@ -29,7 +31,7 @@ class ProductSeeder extends Seeder
                 'category_id' => $category->id,
                 'evaluate' => fake()->numberBetween(1, 5),
                 'avatar' => time() . '.png',
-                'brand' => fake()->company(),
+                'brand' => Arr::random($brands),
                 'size' => fake()->randomElement(['S', 'M', 'L', 'XL']),
                 'color' => fake()->safeColorName(),
             ]);

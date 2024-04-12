@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,3 +38,20 @@ Route::prefix("/customer")->group(function() {
     Route::put("/update", [CustomerController::class, "update"])->middleware("auth:account_api");
 });
 
+/**
+ * Category Route
+ */
+
+Route::prefix("/category")->group(function() {
+    Route::get("/index", [CategoryController::class, "index"]);
+    Route::get("/{id}", [CategoryController::class, "show"])->where('id', '[0-9]+');
+    Route::get("/{id}/brands", [CategoryController::class, "brands"])->where('id', '[0-9]+');
+});
+
+/**
+ * Product Route
+ */
+
+ Route::prefix("/product")->group(function() {
+    Route::get("/brand/{brand}", [ProductController::class, "brand"]);
+});

@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("price");
-            $table->string("quantity");
+            $table->integer("quantity");
             $table->string("slug");
             $table->integer("status");
             $table->string("avatar");
-            $table->string("evaluate");
-            $table->string("category_id");
+            $table->integer("evaluate");
+            $table->unsignedInteger("category_id");
             $table->string("size");
             $table->string("color");
             $table->string("brand");
