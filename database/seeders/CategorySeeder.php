@@ -13,6 +13,13 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        Category::factory(30)->create();
+        $categories = ["mouse pads", "mouse", "laptop", 'keyboard'];
+        foreach($categories as $category) {
+            Category::factory()->create([
+                "name" => $category,
+                "slug" => fake()->slug(),
+                "status" => random_int(0, 1)
+            ]);
+        }
     }
 }
