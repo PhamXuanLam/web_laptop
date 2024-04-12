@@ -25,7 +25,7 @@ class DescriptionSeeder extends Seeder
                 'Storage' => fake()->randomElement(['HDD', 'SSD', 'NVMe SSD']),
                 'Graphics' => fake()->word,
                 'battery' => fake()->randomFloat(2, 0, 100),
-                'RAM' => fake()->randomNumber(4),
+                'RAM' => fake()->randomNumber(2),
                 'Operating_system' => fake()->word,
                 'other' => fake()->sentence,
             ]);
