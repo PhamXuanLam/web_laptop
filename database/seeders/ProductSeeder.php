@@ -9,6 +9,7 @@ use Illuminate\Support\Arr; // Nhập lớp Arr
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+
 class ProductSeeder extends Seeder
 {
     /**
@@ -18,9 +19,7 @@ class ProductSeeder extends Seeder
     {   
         $categories = Category::all();
         $faker = \Faker\Factory::create();
-
         $demandList = ['Graphics', 'Gaming', 'Study', 'Enterprise'];
-        
         foreach($categories as $category)
         {   
             $price = $faker->numberBetween(500, 50000) * 2 * 3;
