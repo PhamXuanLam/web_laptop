@@ -2,40 +2,42 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Arr; // Nhập lớp Arr
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 
 class ProductSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Chạy các seed vào cơ sở dữ liệu.
      */
     public function run(): void
-    {
-        $categories = Category::query()->select(["*"])->get();
-        $brands = ['Dell', 'HP', 'Lenovo', 'Apple', 'Asus', 'MSI', 'Acer', 'Samsung', 'Microsoft', 'Razer'];
+    {   
+        $categories = Category::all();
+        $faker = \Faker\Factory::create();
+        $demandList = ['Graphics', 'Gaming', 'Study', 'Enterprise'];
         foreach($categories as $category)
         {   
-            $price = fake()->numberBetween(500, 50000) * 2 * 3;
+            $price = $faker->numberBetween(500, 50000) * 2 * 3;
             
             Product::factory()->create([
-                
-                'name' =>fake()->name(),
+                'name' => $faker->name(),
                 'price' => $price,
-                'quantity' => fake()->numberBetween(1, 100),
-                'slug' => fake()->slug(),
-                'status' => random_int(0,1),
+                'quantity' => $faker->numberBetween(1, 100),
+                'slug' => $faker->slug(),
+                'demand' => Arr::random($demandList), // Sử dụng lớp Arr ở đây
+                'status' => $faker->boolean(),
                 'category_id' => $category->id,
-                'evaluate' => fake()->numberBetween(1, 5),
+                'evaluate' => $faker->numberBetween(1, 5),
                 'avatar' => time() . '.png',
-                'brand' => Arr::random($brands),
-                'size' => fake()->randomElement(['S', 'M', 'L', 'XL']),
-                'color' => fake()->safeColorName(),
+                'brand' => $faker->company(),
+                'size' => $faker->randomElement(['S', 'M', 'L', 'XL']),
+                'color' => $faker->safeColorName(),
             ]);
         }   
-        
     }
 }
