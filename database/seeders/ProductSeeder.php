@@ -25,6 +25,7 @@ class ProductSeeder extends Seeder
                 'price' => $price,
                 'quantity' => fake()->numberBetween(1, 100),
                 'slug' => fake()->slug(),
+                'demand'=>fake()->sentence(),
                 'status' => random_int(0,1),
                 'category_id' => $category->id,
                 'evaluate' => fake()->numberBetween(1, 5),
