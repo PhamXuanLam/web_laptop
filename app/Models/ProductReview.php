@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order_detail extends Model
+class ProductReview extends Model
 {
     use HasFactory;
     
-    protected $table = "order_details";
+    protected $table = "product_reviews";
 
-    protected $fillable = ['id', 'order_id', 'product_id', 'quantity', 'status', 'created_at', 'updated_at'];
+    protected $fillable = ['id', 'customer_id', 'product_id', 'comment', 'rate', 'created_at', 'updated_at'];
 
     protected $primaryKey = 'id';
 

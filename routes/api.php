@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +54,30 @@ Route::prefix("/category")->group(function() {
  * Product Route
  */
 
- Route::prefix("/product")->group(function() {
+Route::prefix("/product")->group(function() {
     Route::get("/brand/{brand}", [ProductController::class, "brand"]);
 });
+
+/**
+ * Cart Route
+ */
+
+Route::prefix("/cart")->group(function() {
+    Route::post("/addToCart", [CartController::class, "addToCart"]);
+    Route::get("/", [CartController::class, 'index']);
+    Route::put("/updateCart", [CartController::class, "updateCart"]);
+    Route::delete("/removeCart", [CartController::class, "removeCart"]);
+    Route::get("/checkout", [CartController::class, "checkout"])->middleware("auth:account_api");
+});
+
+/**
+ * Order Route
+ */
+
+Route::prefix("/order")->group(function() {
+    Route::post("/", [OrderController::class, "order"])->middleware("auth:account_api");
+});
+
+/**
+ * Order Route
+ */
