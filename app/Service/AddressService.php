@@ -11,9 +11,16 @@ use Illuminate\Support\Facades\Log;
 
 class AddressService {
 
-    public function getAddress($province_id, $district_id, $commune_id) {
+    public function getAddress($province_id = null, $district_id = null, $commune_id = null, $id = null) 
+    {
+        if ($id != null) {
+            return Address::query()
+            ->select(['id', 'name', 'province_id', 'district_id', 'commune_id'])
+            ->find($id);
+        }
+
         return Address::query()
-                ->select(["*"])
+                ->select(['id', 'name', 'province_id', 'district_id', 'commune_id'])
                 ->where("province_id", $province_id)
                 ->where("district_id", $district_id)
                 ->where("commune_id", $commune_id)

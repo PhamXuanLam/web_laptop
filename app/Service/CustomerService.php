@@ -32,16 +32,30 @@ class CustomerService {
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("File: ".$e->getFile().'---Line: '.$e->getLine()."---Message: ".$e->getMessage());
+            return [
+                'success' => false,
+                'message' => "An error occurred!",
+                'error' => $e->getMessage()
+            ];
         }
     }
 
     public function getCustomerByAccountId($account_id) {
         return Customer::query()
-                ->select(["*"])
-                ->with(['address' => function($query) {
-                    $query->select(['id', 'name', 'province_id', 'district_id', 'commune_id']);
-                }])
-                ->where("account_id", $account_id)
-                ->first();
+            ->select(["*"])
+            ->with(['address' => function($query) {
+                $query->select(['id', 'name', 'province_id', 'district_id', 'commune_id']);
+            }])
+            ->where("account_id", $account_id)
+            ->first();
+    }
+
+    public function getCustomerById($id) {
+        return Customer::query()
+            ->select(["*"])
+            ->with(['address' => function($query) {
+                $query->select(['id', 'name', 'province_id', 'district_id', 'commune_id']);
+            }])
+            ->find($id);
     }
 }

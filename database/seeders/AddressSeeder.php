@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Jobs\ImportAdministrative;
 use App\Models\Address;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -14,6 +15,8 @@ class AddressSeeder extends Seeder
      */
     public function run(): void
     {
+        dispatch(new ImportAdministrative());
+        
         $communes = Commune::query()
             ->with(['district', 'district.province'])
             ->select(['*'])

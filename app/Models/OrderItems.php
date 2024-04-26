@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product_review extends Model
+class OrderItems extends Model
 {
     use HasFactory;
     
-    protected $table = "product_reviews";
+    protected $table = "order_items";
 
-    protected $fillable = ['id', 'customer_id', 'product_id', 'comment', 'rate', 'created_at', 'updated_at'];
+    protected $fillable = ['id', 'order_id', 'product_id', 'quantity', 'status', 'created_at', 'updated_at'];
+
     protected $primaryKey = 'id';
 
     public $timestamps = true;
