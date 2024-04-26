@@ -56,6 +56,7 @@ Route::prefix("/category")->group(function() {
 
 Route::prefix("/product")->group(function() {
     Route::get("/brand/{brand}", [ProductController::class, "brand"]);
+    Route::get("/demands", [ProductController::class, "demands"]);
 });
 
 /**

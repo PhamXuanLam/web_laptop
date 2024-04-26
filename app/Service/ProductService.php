@@ -11,4 +11,11 @@ class ProductService {
             ->where("brand", 'LIKE', '%' . $brand . '%')
             ->get();
     }
+    
+    public function getDemands(){
+        return Product::query()
+            ->select('demand')
+            ->distinct()
+            ->get();
+    }
 }
