@@ -15,4 +15,13 @@ class ProductController extends Controller
             "products" => $products
         ]);
     }
+        
+    public function demands(){
+        $demands = app(ProductService::class)->getDemands();
+        return response()->json([
+            "messages" => "List demand",
+            "Demands" => $demands
+        ]);
+    }
+    
 }

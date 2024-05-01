@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedInteger("category_id");
             $table->string("size");
             $table->string("color");
+            $table->string("demand");
             $table->string("brand");
             $table->timestamps();
         });
