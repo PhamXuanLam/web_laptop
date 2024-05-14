@@ -30,24 +30,20 @@ class EmployeeRequest extends FormRequest
             "phone" => "required|string|min:10|max:12|unique:accounts,phone," . request()->account_id,
             "first_name" => "required|string|max:20",
             "last_name" => "required|string|max:20",
-            'birth_day' => "nullable|date",
+            'birth_day' => "required|date",
             'avatar' => "nullable|image|mimes:jpeg,png,jpg,gif|max:2048",
-            'role'=> "nullable|string",
-            'province_id' => "nullable|numeric|exists:provinces,id",
-            'district_id' => "nullable|numeric|exists:districts,id",
-            'commune_id' => "nullable|numeric|exists:communes,id",
+            'role'=> "required|string",
+            'province_id' => "required|numeric|exists:provinces,id",
+            'district_id' => "required|numeric|exists:districts,id",
+            'commune_id' => "required|numeric|exists:communes,id",
             'salary' => "required|numeric"
         ];
 
         // Kiểm tra nếu là "đăng ký" thì thêm quy tắc cho trường "password"
         if ($this->isMethod('post')) {
-            $rules['password'] = 'required|confirmed';
+            $rules['password'] = 'required';
         } elseif($this->isMethod('put')) {
             $rules['account_id'] = 'required|numeric';
-        } elseif($this->isMethod('delete')) {
-            return [
-                "id" => 'required|numeric'
-            ];
         }
 
         return $rules;

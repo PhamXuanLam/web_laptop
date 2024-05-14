@@ -73,13 +73,9 @@ class AccountService {
                 $employee = $employeeService->getEmployeeByAccountId($account->id);
 
                 if ($employee) {
-                    if(isset($province_id) && isset($district_id) && isset($commune_id)) {
-                        $employeeService->storeEmployee($account->id, $employee, $salary, $province_id, $district_id, $commune_id);
-                    } else {
-                        $employeeService->storeEmployee($account->id, $employee, $salary);
-                    }
+                    $employeeService->storeEmployee($account->id, $employee, $salary, $province_id, $district_id, $commune_id);
                 } else {
-                    $employeeService->storeEmployee($account->id, new Employee(), $salary);
+                    $employeeService->storeEmployee($account->id, new Employee(), $salary, $province_id, $district_id, $commune_id);
                 }
             }
             DB::commit();
@@ -101,5 +97,31 @@ class AccountService {
     public function getAccountById($id) {
         return Account::query()
             ->find($id);
+    }
+
+    public function deleteAccount(Account $account)
+    {
+        DB::beginTransaction();
+        try {
+            $account->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("File: ".$e->getFile().'---Line: '.$e->getLine()."---Message: ".$e->getMessage());
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    public function getEmployeeByKeyword(string $keyword)
+    {
+        return Account::where(function($query) use ($keyword) {
+            $query->where('username', 'like', '%' . $keyword . '%')
+                  ->orWhere('first_name', 'like', '%' . $keyword . '%')
+                  ->orWhere('last_name', 'like', '%' . $keyword . '%')
+                  ->orWhere('email', 'like', '%' . $keyword . '%')
+                  ->orWhere('phone', 'like', '%' . $keyword . '%');
+            })
+            ->where('role', 'EMPLOYEE')
+            ->get();
     }
 }

@@ -23,9 +23,11 @@ class EmployeeController extends Controller
                     $account = app(AccountService::class)->getAccountByAccountId($employee->account_id);
                     $address = app(AddressService::class)->getAddress("", "", "", $employee->address_id);
                     $response[] = [
-                        'employee' => $employee,
-                        'account' => $account,
-                        'address' => $address
+                        'first_name' => $account->first_name,
+                        'last_name' => $account->last_name,
+                        'birth_day' => $account->birth_day,
+                        'email' => $account->email,
+                        'address' => $address->name,
                     ];
                 }
 
@@ -48,8 +50,9 @@ class EmployeeController extends Controller
     {
         $params = $request->only([
             'username', 'email',
-            'first_name', 'last_name',
-            'phone', 'password', 'role', "salary"
+            'first_name', 'last_name', "password",
+            'phone','birth_day', 'avatar', 'role',
+            'province_id', 'district_id', 'commune_id', "salary"
         ]);
 
         $account = Auth::guard('account_api')->user();
@@ -113,28 +116,82 @@ class EmployeeController extends Controller
         }
     }
 
-    // public function delete(EmployeeRequest $request)
-    // {
-    //     $account = Auth::guard('account_api')->user();
-    //     if($account) {
-    //         if($account->role === Admin::ADMIN_ROLE) {
+    public function delete(string $id)
+    {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                app(EmployeeService::class)->deleteEmployee($id);
+                return response()->json([
+                    "status" => true,
+                    "message" => "Delete successfully!",
+                ]);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
 
-    //             return response()->json([
-    //                 "status" => true,
-    //                 "message" => "Update successfully!",
-    //                 "data" => $account_update,
-    //             ]);
-    //         } else {
-    //             return response()->json([
-    //                 "status" => false,
-    //                 "message" => "You do not have access!",
-    //             ]);
-    //         }
-    //     } else {
-    //         return response()->json([
-    //             "status" => false,
-    //             "message" => "Please login!",
-    //         ]);
-    //     }
-    // }
+    public function show(string $id)
+    {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                $employee = app(EmployeeService::class)->getEmployeeById($id);
+                $employee->info  = app(AccountService::class)->getAccountByAccountId($employee->account_id);
+                return response()->json([
+                    "status" => true,
+                    "message" => "Employee detail",
+                    "employee" => $employee
+                ]);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
+
+    public function search(string $keyword)
+    {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                $accounts = app(AccountService::class)->getEmployeeByKeyword($keyword);
+                $response = [];
+                foreach($accounts as $account) {
+                    $employee = app(EmployeeService::class)->getEmployeeByAccountId($account->id);
+                    $response[] = [
+                        "employee" => $employee,
+                        "info" => $account
+                    ];
+                }
+                return response()->json($response);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
 }

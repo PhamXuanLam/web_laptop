@@ -68,4 +68,24 @@ class EmployeeService
         }])
         ->find($id);
     }
+
+    public function deleteEmployee($id)
+    {
+        DB::beginTransaction();
+        try {
+            $employee = $this->getEmployeeById($id);
+            $account = app(AccountService::class)->getAccountById($employee->account_id);
+            app(AccountService::class)->deleteAccount($account);
+            $employee->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("File: ".$e->getFile().'---Line: '.$e->getLine()."---Message: ".$e->getMessage());
+            return [
+                'success' => false,
+                'message' => "An error occurred!",
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }
