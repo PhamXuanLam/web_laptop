@@ -4,13 +4,14 @@ namespace App\Service;
 
 use App\Models\Account;
 use App\Models\Customer;
+use App\Models\Employee;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class AccountService {
-    
-    public function storeAccount($params, Account $account) 
+
+    public function storeAccount($params, Account $account)
     {
         DB::beginTransaction();
         try {
@@ -23,6 +24,11 @@ class AccountService {
                 $account->role = $params['role'];
             } else {
                 $account->role = Customer::CUSTOMER_ROLE;
+            }
+
+            if(isset($params['salary'])) {
+                $salary = $params['salary'];
+                unset($params['salary']);
             }
 
             if(isset($params['province_id'])) {
@@ -43,9 +49,9 @@ class AccountService {
             $account->fill($params);
 
             $account->save();
-            
+
             if($account->role === Customer::CUSTOMER_ROLE) {
-                
+
                 $customerService = app(CustomerService::class);
 
                 $customer = $customerService->getCustomerByAccountId($account->id);
@@ -59,6 +65,22 @@ class AccountService {
                 } else {
                     $customerService->storeCustomer($account->id, new Customer());
                 }
+
+            } elseif($account->role === Employee::EMPLOYEE_ROLE) {
+
+                $employeeService = app(EmployeeService::class);
+
+                $employee = $employeeService->getEmployeeByAccountId($account->id);
+
+                if ($employee) {
+                    if(isset($province_id) && isset($district_id) && isset($commune_id)) {
+                        $employeeService->storeEmployee($account->id, $employee, $salary, $province_id, $district_id, $commune_id);
+                    } else {
+                        $employeeService->storeEmployee($account->id, $employee, $salary);
+                    }
+                } else {
+                    $employeeService->storeEmployee($account->id, new Employee(), $salary);
+                }
             }
             DB::commit();
             return $account;
@@ -67,5 +89,17 @@ class AccountService {
             Log::error("File: ".$e->getFile().'---Line: '.$e->getLine()."---Message: ".$e->getMessage());
             return ['error' => $e->getMessage()];
         }
+    }
+
+    public function getAccountByAccountId($account_id)
+    {
+        return Account::query()
+            ->select(["username", "first_name", "last_name", "birth_day", "email", "phone", 'avatar'])
+            ->find($account_id);
+    }
+
+    public function getAccountById($id) {
+        return Account::query()
+            ->find($id);
     }
 }

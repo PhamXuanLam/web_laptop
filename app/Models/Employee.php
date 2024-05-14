@@ -16,6 +16,8 @@ class Employee extends Model
     protected $primaryKey = 'id';
 
     public $timestamps = true;
+    
+    const EMPLOYEE_ROLE = "EMPLOYEE";
 
     public function account() {
         return $this->hasOne(Account::class, 'id', 'account_id');

@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
@@ -74,7 +76,6 @@ Route::prefix("/cart")->group(function() {
 /**
  * Order Route
  */
-
 Route::prefix("/order")->group(function() {
     Route::post("/", [OrderController::class, "order"])->middleware("auth:account_api");
 });
@@ -82,3 +83,16 @@ Route::prefix("/order")->group(function() {
 /**
  * Order Route
  */
+Route::prefix("/image")->group(function() {
+    Route::get("/", [ImageController::class, "test"]);
+});
+
+/**
+ * Order Route
+ */
+Route::prefix("/employee")->group(function() {
+    Route::get("/", [EmployeeController::class, "index"]);
+    Route::post("/register",[EmployeeController::class, "register"]);
+    Route::put("/update",[EmployeeController::class, "update"]);
+    Route::delete("/delete",[EmployeeController::class, "delete"]);
+})->middleware("auth:account_api");

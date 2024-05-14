@@ -16,4 +16,6 @@ class Image extends Model
     protected $primaryKey = 'id';
 
     public $timestamps = true;
+
+    const DEFAULT = "storage/default.jpg";
 }
