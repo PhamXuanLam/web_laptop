@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('account_id');
-            $table->unsignedInteger('address_id');
+            $table->unsignedInteger('address_id')->nullable();
             $table->integer('salary');
             $table->timestamps();
         });

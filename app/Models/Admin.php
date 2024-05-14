@@ -20,4 +20,6 @@ class Admin extends Model
     public function account() {
         return $this->hasOne(Account::class, 'id', 'account_id');
     }
+
+    const ADMIN_ROLE = "ADMIN";
 }
