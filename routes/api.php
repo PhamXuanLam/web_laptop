@@ -8,7 +8,6 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -94,5 +93,7 @@ Route::prefix("/employee")->group(function() {
     Route::get("/", [EmployeeController::class, "index"]);
     Route::post("/register",[EmployeeController::class, "register"]);
     Route::put("/update",[EmployeeController::class, "update"]);
-    Route::delete("/delete",[EmployeeController::class, "delete"]);
+    Route::delete("/delete/{id}",[EmployeeController::class, "delete"])->where("id", "[0-9]+");
+    Route::get("/show/{id}",[EmployeeController::class, "show"])->where("id", "[0-9]+");
+    Route::get("/search/{keyword}", [EmployeeController::class, "search"]);
 })->middleware("auth:account_api");

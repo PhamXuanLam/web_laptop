@@ -11,11 +11,11 @@ class ProductController extends Controller
         $products = app(ProductService::class)->getProductByBrand($brand);
 
         return response()->json([
-            "messages" => "List product by brand", 
+            "messages" => "List product by brand",
             "products" => $products
         ]);
     }
-        
+
     public function demands(){
         $demands = app(ProductService::class)->getDemands();
         return response()->json([
@@ -23,5 +23,5 @@ class ProductController extends Controller
             "Demands" => $demands
         ]);
     }
-    
+
 }
