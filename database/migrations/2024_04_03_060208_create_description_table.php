@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string("graphics")->nullable(); //đồ họa,
             $table->string("battery")->nullable(); // pin,
             $table->string("operating_system")->nullable(); //hệ điều hành
-            $table->string("ram");
-            $table->string("other");
+            $table->string("ram")->nullable();
+            $table->string("other")->nullable();
             $table->timestamps();
         });
     }

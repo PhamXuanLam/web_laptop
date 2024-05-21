@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    
+
     protected $table = "orders";
 
     protected $fillable = ['id', 'customer_id', 'employee_id','total', 'tax','discount','pay','status', 'created_at', 'updated_at'];
@@ -39,5 +39,15 @@ class Order extends Model
                 self::STATUS_PENDING_LABEL;
                 break;
         }
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItems::class, "order_id", "id");
+    }
+
+    public function customer()
+    {
+        return $this->hasOne(Customer::class, "id", "customer_id");
     }
 }
