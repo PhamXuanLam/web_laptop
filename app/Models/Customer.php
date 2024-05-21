@@ -26,4 +26,14 @@ class Customer extends Model
     public function address() {
         return $this->hasOne(Address::class, 'id', 'address_id');
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, "customer_id", "id");
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class, "customer_id", "id");
+    }
 }

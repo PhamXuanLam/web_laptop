@@ -2,26 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ImageRequest;
 use App\Models\Admin;
-use App\Models\Image;
-use App\Models\Product;
-use App\Service\ImageService;
+use App\Models\Description;
+use App\Service\DescriptionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ImageController extends Controller
+class DescriptionController extends Controller
 {
-    public function index(string $id)
+    public function create(Request $request, string $id)
     {
         $account = Auth::guard('account_api')->user();
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
-
-                $res = app(ImageService::class)->delete($id);
-                return response()->json([
-                    $res
+                $params = $request->only([
+                    'guarantee', 'mass', 'cpu',
+                    'screen', 'storage', 'graphics',
+                    'battery', 'operating_system', 'ram',
+                    'other'
                 ]);
+                $res = app(DescriptionService::class)->store(new Description(), $params, $id);
+                if ($res == true) {
+                    return response()->json([
+                        "status" => true,
+                        "message" => "Create successfully!",
+                    ]);
+                } else {
+                    return response()->json([
+                        "status" => false,
+                        "message" => "Has error!",
+                    ]);
+                }
             } else {
                 return response()->json([
                     "status" => false,
@@ -34,16 +45,22 @@ class ImageController extends Controller
                 "message" => "Please login!",
             ]);
         }
+
     }
 
-    public function create(ImageRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
         $account = Auth::guard('account_api')->user();
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
-                $images = $request->file('image'); // Đây sẽ là một mảng các file
-
-                $res = app(ImageService::class)->store($id, Product::DIRECTORY_IMAGE, $images);
+                $params = $request->only([
+                    'guarantee', 'mass', 'cpu',
+                    'screen', 'storage', 'graphics',
+                    'battery', 'operating_system', 'ram',
+                    'other'
+                ]);
+                $description = app(DescriptionService::class)->getDescriptionByProductId($id);
+                $res = app(DescriptionService::class)->store($description, $params);
                 if ($res == true) {
                     return response()->json([
                         "status" => true,
@@ -74,8 +91,7 @@ class ImageController extends Controller
         $account = Auth::guard('account_api')->user();
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
-
-                $res = app(ImageService::class)->delete($id);
+                $res = app(DescriptionService::class)->delete($id);
                 if ($res == true) {
                     return response()->json([
                         "status" => true,
@@ -87,6 +103,29 @@ class ImageController extends Controller
                         "message" => "Has error!",
                     ]);
                 }
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
+
+    public function index(string $id)
+    {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                $res = app(DescriptionService::class)->getDescriptionByProductId($id);
+                return response()->json([
+                    $res,
+                ]);
             } else {
                 return response()->json([
                     "status" => false,

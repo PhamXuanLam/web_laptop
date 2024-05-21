@@ -16,10 +16,10 @@ return new class extends Migration
             $table->string("name");
             $table->double("price");
             $table->integer("quantity");
-            $table->string("slug");
-            $table->integer("status");
-            $table->string("avatar");
-            $table->integer("evaluate");
+            $table->string("slug")->nullable();
+            $table->integer("status")->nullable()->default(1);
+            $table->string("avatar")->nullable();
+            $table->integer("evaluate")->nullable()->default(0);
             $table->unsignedInteger("category_id");
             $table->string("size");
             $table->string("color");

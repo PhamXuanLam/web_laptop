@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger("customer_id");
             $table->unsignedInteger("product_id");
-            $table->string("comment");
+            $table->string("comment")->nullable();
             $table->integer("rate");
             $table->timestamps();
         });

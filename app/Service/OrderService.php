@@ -9,6 +9,49 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OrderService {
+    public function getOrderPending()
+    {
+        return Order::query()
+            ->select(["*"])
+            ->with(['orderItems'])
+            ->where("status", 1)
+            ->get();
+    }
+
+    public function getOrderById($order_id)
+    {
+        return Order::query()
+            ->with(['orderItems'])
+            ->find($order_id);
+    }
+
+    public function accept($employee_id, $order_id)
+    {
+        DB::beginTransaction();
+        try {
+            $order = $this->getOrderById($order_id);
+            $order->employee_id = $employee_id;
+            foreach($order->orderItems as $item) {
+                $product = app(ProductService::class)->getProductById($item->product_id);
+                $product->quantity = $product->quantity - $item->quantity;
+                $product->save();
+            }
+            $order->status = 2;
+            $order->save();
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("File: ".$e->getFile().'---Line: '.$e->getLine()."---Message: ".$e->getMessage());
+            return [
+                'success' => false,
+                'message' => "An error occurred!",
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
+
     public function order(int $customer_id)
     {
         DB::beginTransaction();
