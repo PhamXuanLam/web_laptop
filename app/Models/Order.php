@@ -50,4 +50,9 @@ class Order extends Model
     {
         return $this->hasOne(Customer::class, "id", "customer_id");
     }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, "id", "employee_id");
+    }
 }

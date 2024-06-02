@@ -41,10 +41,7 @@ class EmployeeRequest extends FormRequest
         // Kiểm tra nếu là "đăng ký" thì thêm quy tắc cho trường "password"
         if ($this->isMethod('post')) {
             $rules['password'] = 'required';
-        } elseif($this->isMethod('put')) {
-            $rules['account_id'] = 'required|numeric';
         }
-
         return $rules;
     }
     /**

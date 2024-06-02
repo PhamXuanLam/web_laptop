@@ -23,11 +23,11 @@ class ProductSeeder extends Seeder
         $demandList = ['Graphics', 'Gaming', 'Study', 'Enterprise'];
         for($i = 0; $i < 30; $i++) {
             foreach($categories as $category)
-            {   
+            {
                 $price = fake()->numberBetween(500, 50000) * 2 * 3;
-                
+
                 Product::factory()->create([
-                    
+
                     'name' =>fake()->name(),
                     'price' => $price,
                     'quantity' => fake()->numberBetween(1, 100),
@@ -35,13 +35,12 @@ class ProductSeeder extends Seeder
                     'status' => random_int(0,1),
                     'category_id' => $category->id,
                     'evaluate' => fake()->numberBetween(1, 5),
-                    'avatar' => time() . '.png',
                     'brand' => Arr::random($brands),
                     'size' => fake()->randomElement(['S', 'M', 'L', 'XL']),
                     'color' => fake()->safeColorName(),
                     'demand' => Arr::random($demandList),
                 ]);
-            }   
+            }
         }
     }
 }

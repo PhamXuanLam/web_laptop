@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OrderService {
+    public function getAll()
+    {
+        return Order::query()
+            ->select(["*"])
+            ->with(["employee", "customer"])
+            ->get();
+    }
+
     public function getOrderPending()
     {
         return Order::query()
@@ -21,7 +29,7 @@ class OrderService {
     public function getOrderById($order_id)
     {
         return Order::query()
-            ->with(['orderItems'])
+            ->with(['orderItems', 'employee', 'customer'])
             ->find($order_id);
     }
 

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
 use App\Models\Admin;
+use App\Models\Description;
 use App\Models\Image;
 use App\Models\Product;
+use App\Service\DescriptionService;
 use App\Service\ImageService;
 use App\Service\ProductService;
 use Illuminate\Support\Facades\Auth;
@@ -67,12 +69,23 @@ class ProductController extends Controller
             if($account->role === Admin::ADMIN_ROLE) {
                 $params = $request->only([
                     "name" , "price" , "quantity",
-                    "avatar", "category_id", "size",
-                    "color", "demand", "brand"
+                    "category_id", "size",
+                    "color", "demand", "brand",
                 ]);
+                $description = $request->only([
+                    'guarantee', 'mass', 'cpu',
+                    'screen', 'storage', 'graphics',
+                    'battery', 'operating_system', 'ram',
+                    'other'
+                ]);
+                $images = $request->file('image'); // Đây sẽ là một mảng các file
                 $product = app(ProductService::class)->store(new Product(), $params);
-                $product->avatar = app(ImageService::class)->getImageUrl(Product::DIRECTORY_IMAGE . $product->id . "/", $product->avatar, Image::DEFAULT);
-                return response()->json([$product]);
+                app(ImageService::class)->store($product->id, Product::DIRECTORY_IMAGE, $images);
+                $avatar = app(ImageService::class)->getAvatar($product->id)->name;
+                $product->avatar = app(ImageService::class)->getImageUrl(Product::DIRECTORY_IMAGE . $product->id . "/", $avatar, Image::DEFAULT);
+                $descriptionRes = app(DescriptionService::class)->store(new Description(), $description, $product->id);
+
+                return response()->json([$product, $descriptionRes]);
             } else {
                 return response()->json([
                     "status" => false,
@@ -94,12 +107,24 @@ class ProductController extends Controller
             if($account->role === Admin::ADMIN_ROLE) {
                 $params = $request->only([
                     "name" , "price" , "quantity",
-                    "avatar", "category_id", "size",
-                    "color", "demand", "brand"
+                    "category_id", "size",
+                    "color", "demand", "brand",
                 ]);
+                $description = $request->only([
+                    'guarantee', 'mass', 'cpu',
+                    'screen', 'storage', 'graphics',
+                    'battery', 'operating_system', 'ram',
+                    'other'
+                ]);
+                $images = $request->file('image');
                 $product = app(ProductService::class)->store(Product::find($id), $params);
-                $product->avatar = app(ImageService::class)->getImageUrl(Product::DIRECTORY_IMAGE . $product->id . "/", $product->avatar, Image::DEFAULT);
-                return response()->json([$product]);
+                app(ImageService::class)->store($product->id, Product::DIRECTORY_IMAGE, $images);
+                $avatar = app(ImageService::class)->getAvatar($product->id)->name;
+                $product->avatar = app(ImageService::class)->getImageUrl(Product::DIRECTORY_IMAGE . $product->id . "/", $avatar, Image::DEFAULT);
+                $temp = app(DescriptionService::class)->getDescriptionByProductId($product->id);
+                $descriptionRes = app(DescriptionService::class)->store($temp, $description);
+                
+                return response()->json([$product, $descriptionRes]);
             } else {
                 return response()->json([
                     "status" => false,
@@ -120,7 +145,7 @@ class ProductController extends Controller
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
                 $res = app(ProductService::class)->getProductByKeyword($keyword);
-                return response()->json([$res]);
+                return response()->json($res);
             } else {
                 return response()->json([
                     "status" => false,

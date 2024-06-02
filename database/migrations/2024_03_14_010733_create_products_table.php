@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer("quantity");
             $table->string("slug")->nullable();
             $table->integer("status")->nullable()->default(1);
-            $table->string("avatar")->nullable();
             $table->integer("evaluate")->nullable()->default(0);
             $table->unsignedInteger("category_id");
             $table->string("size");

@@ -39,6 +39,7 @@ class ImageService {
 
     public function store($id, $path, $images)
     {
+        $this->delete($id);
         DB::beginTransaction();
         try {
             foreach($images as $file) {
@@ -66,6 +67,14 @@ class ImageService {
             ->select(["id", "product_id", "name"])
             ->where("product_id", $product_id)
             ->get();
+    }
+
+    public function getAvatar($product_id)
+    {
+        return Image::query()
+        ->select(["name"])
+        ->where("product_id", $product_id)
+        ->first();
     }
 
     public function delete($product_id)

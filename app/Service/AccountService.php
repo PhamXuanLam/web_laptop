@@ -124,4 +124,17 @@ class AccountService {
             ->where('role', 'EMPLOYEE')
             ->get();
     }
+
+    public function getCustomerByKeyword(string $keyword)
+    {
+        return Account::where(function($query) use ($keyword) {
+            $query->where('username', 'like', '%' . $keyword . '%')
+                  ->orWhere('first_name', 'like', '%' . $keyword . '%')
+                  ->orWhere('last_name', 'like', '%' . $keyword . '%')
+                  ->orWhere('email', 'like', '%' . $keyword . '%')
+                  ->orWhere('phone', 'like', '%' . $keyword . '%');
+            })
+            ->where('role', 'CUSTOMER')
+            ->get();
+    }
 }
