@@ -64,15 +64,7 @@ class ProductService {
     {
         DB::beginTransaction();
         try {
-            $avatar = $param["avatar"];
-            unset($param["avatar"]);
             $product->fill($param);
-            if($product->id == null) {
-                $product->save();
-                $product->avatar = app(ImageService::class)->uploadImage($product->id, Product::DIRECTORY_IMAGE, $avatar);
-            } else {
-                $product->avatar = app(ImageService::class)->uploadImage($product->id, Product::DIRECTORY_IMAGE, $avatar, $product->avatar);
-            }
             $product->save();
             DB::commit();
             return $product;

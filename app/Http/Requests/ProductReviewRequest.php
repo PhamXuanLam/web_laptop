@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class ProductRequest extends FormRequest
+class ProductReviewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,27 +24,12 @@ class ProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required",
-            "price" => "required|numeric",
-            "quantity" => "required|numeric",
-            'image' => [
-                'required',
-                'array'
-            ],
-            'image.*' => [
-                'image',
-                'mimes:jpeg,png,jpg',
-                'mimetypes:image/jpeg,image/png,image/jpg',
-                'max:3072',
-            ],
-            "category_id" => "required|numeric",
-            "size" => "required",
-            "color" => "required",
-            "demand" => "required",
-            "brand" => "required",
+            "product_id" => "required",
+            "customer_id" => "required",
+            "comment" => "nullable",
+            'rate' => "rate"
         ];
     }
-
     /**
      * @overrride
      * Handle a failed validation attempt.

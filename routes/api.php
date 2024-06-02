@@ -94,7 +94,7 @@ Route::prefix("/admin")->group(function() {
     Route::prefix("/employee")->group(function() {
         Route::get("/", [EmployeeController::class, "index"]);
         Route::post("/register",[EmployeeController::class, "register"]);
-        Route::put("/update",[EmployeeController::class, "update"]);
+        Route::put("/update/{id}",[EmployeeController::class, "update"])->where("id", "[0-9]+");
         Route::delete("/delete/{id}",[EmployeeController::class, "delete"])->where("id", "[0-9]+");
         Route::get("/show/{id}",[EmployeeController::class, "show"])->where("id", "[0-9]+");
         Route::get("/search/{keyword}", [EmployeeController::class, "search"]);
@@ -137,6 +137,13 @@ Route::prefix("/admin")->group(function() {
         Route::get("/", [CustomerController::class, "index"]);
         Route::get("/search/{keyword}", [CustomerController::class, "search"]);
         Route::get("/{filter}/{order}", [CustomerController::class, "filter"]);
+    });
+
+    /**
+     * Quản lý Đơn hàng
+     */
+    Route::prefix("/order")->group(function() {
+        Route::get("/", [OrderController::class, "index"]);
     });
 
 })->middleware("auth:account_api");

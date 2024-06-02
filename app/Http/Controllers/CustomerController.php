@@ -7,6 +7,7 @@ use App\Http\Requests\CustomerRequest;
 use App\Models\Account;
 use App\Models\Admin;
 use App\Models\Customer;
+use App\Service\AddressService;
 use App\Service\CustomerService;
 use Illuminate\Support\Facades\Auth;
 
@@ -82,8 +83,9 @@ class CustomerController extends Controller
                 $response = [];
                 foreach($customers as $customer) {
                     $account = app(AccountService::class)->getAccountByAccountId($customer->account_id);
-                    $address = app(CustomerService::class)->getAddress("", "", "", $customer->address_id);
+                    $address = app(AddressService::class)->getAddress("", "", "", $customer->address_id);
                     $response[] = [
+                        'id' => $customer->id,
                         'first_name' => $account->first_name,
                         'last_name' => $account->last_name,
                         'birth_day' => $account->birth_day,
@@ -137,13 +139,17 @@ class CustomerController extends Controller
         $account = Auth::guard('account_api')->user();
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
-                $accounts = app(AccountService::class)->getEmployeeByKeyword($keyword);
+                $accounts = app(AccountService::class)->getCustomerByKeyword($keyword);
                 $response = [];
                 foreach($accounts as $account) {
-                    $customer = app(CustomerService::class)->getEmployeeByAccountId($account->id);
+                    $customer = app(CustomerService::class)->getCustomerByAccountId($account->id);
                     $response[] = [
-                        "customer" => $customer,
-                        "info" => $account
+                        'id' => $customer->id,
+                        'first_name' => $account->first_name,
+                        'last_name' => $account->last_name,
+                        'birth_day' => $account->birth_day,
+                        'email' => $account->email,
+                        'address' => $customer->address->name,
                     ];
                 }
                 return response()->json($response);

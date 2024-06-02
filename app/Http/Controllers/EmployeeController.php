@@ -23,6 +23,7 @@ class EmployeeController extends Controller
                     $account = app(AccountService::class)->getAccountByAccountId($employee->account_id);
                     $address = app(AddressService::class)->getAddress("", "", "", $employee->address_id);
                     $response[] = [
+                        'id' => $employee->id,
                         'first_name' => $account->first_name,
                         'last_name' => $account->last_name,
                         'birth_day' => $account->birth_day,
@@ -79,10 +80,10 @@ class EmployeeController extends Controller
         }
     }
 
-    public function update(EmployeeRequest $request)
+    public function update(EmployeeRequest $request, string $id)
     {
         $params = $request->only([
-            'username', 'email', 'account_id',
+            'username', 'email',
             'first_name', 'last_name',
             'phone','birth_day', 'avatar', 'role',
             'province_id', 'district_id', 'commune_id', "salary"
@@ -91,8 +92,7 @@ class EmployeeController extends Controller
         $account = Auth::guard('account_api')->user();
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
-                $account_id = $params['account_id'];
-                unset($params['account_id']);
+                $account_id = app(EmployeeService::class)->getEmployeeById($id)->account_id;
                 $temp = app(AccountService::class)->getAccountById($account_id);
                 $account_update = app(AccountService::class)->storeAccount($params, $temp);
                 $employee_update = app(EmployeeService::class)->getEmployeeByAccountId($account_update->id);
@@ -176,8 +176,12 @@ class EmployeeController extends Controller
                 foreach($accounts as $account) {
                     $employee = app(EmployeeService::class)->getEmployeeByAccountId($account->id);
                     $response[] = [
-                        "employee" => $employee,
-                        "info" => $account
+                        'id' => $employee->id,
+                        'first_name' => $account->first_name,
+                        'last_name' => $account->last_name,
+                        'birth_day' => $account->birth_day,
+                        'email' => $account->email,
+                        'address' => $employee->address->name,
                     ];
                 }
                 return response()->json($response);

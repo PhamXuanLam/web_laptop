@@ -17,7 +17,7 @@ class DescriptionService {
             $description->fill($params);
             $description->save();
             DB::commit();
-            return true;
+            return $description;
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error("File: ".$e->getFile().'---Line: '.$e->getLine()."---Message: ".$e->getMessage());

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderRequest;
+use App\Models\Admin;
 use App\Models\Employee;
 use App\Service\AddressService;
 use App\Service\CustomerService;
@@ -77,6 +78,40 @@ class OrderController extends Controller
                 return response()->json([
                    $response
                 ]);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
+
+    // public function update()
+
+    public function index()
+    {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                $orders = app(OrderService::class)->getAll();
+                $res = [];
+                foreach($orders as $order) {
+                    $res[] = [
+                        "employee_id" => $order->employee_id,
+                        "customer_id" => $order->customer_id,
+                        "created_at" => $order->created_at,
+                        "total" => $order->total,
+                    ];
+                }
+                return response()->json(
+                    $res
+                );
             } else {
                 return response()->json([
                     "status" => false,
