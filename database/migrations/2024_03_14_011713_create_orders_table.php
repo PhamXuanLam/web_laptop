@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer("discount");
             $table->double("pay");
             $table->integer("status")->default(1);
+            $table->unsignedInteger("address_id");
             $table->timestamps();
         });
     }

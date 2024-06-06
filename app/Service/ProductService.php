@@ -79,6 +79,17 @@ class ProductService {
         }
     }
 
+    public function evaluate($product_id ,$rate)
+    {
+        $product = $this->getProductById($product_id);
+        if($product->evaluate == null) {
+            $product->evaluate = $rate;
+        } else {
+            $product->evaluate = ($rate + $product->evaluate)/2;
+        }
+        $product->save();
+    }
+
     public function delete($id)
     {
         DB::beginTransaction();

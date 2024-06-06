@@ -25,9 +25,8 @@ class ProductReviewRequest extends FormRequest
     {
         return [
             "product_id" => "required",
-            "customer_id" => "required",
             "comment" => "nullable",
-            'rate' => "rate"
+            'rate' => "required"
         ];
     }
     /**

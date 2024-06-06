@@ -34,7 +34,6 @@ class ProductSeeder extends Seeder
                     'slug' => fake()->slug(),
                     'status' => random_int(0,1),
                     'category_id' => $category->id,
-                    'evaluate' => fake()->numberBetween(1, 5),
                     'brand' => Arr::random($brands),
                     'size' => fake()->randomElement(['S', 'M', 'L', 'XL']),
                     'color' => fake()->safeColorName(),

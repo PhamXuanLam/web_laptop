@@ -59,8 +59,56 @@ class OrderService {
         }
     }
 
+    public function store(Order $order, $params)
+    {
+        DB::beginTransaction();
+        try {
+            $order->fill($params);
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("File: ".$e->getFile().'---Line: '.$e->getLine()."---Message: ".$e->getMessage());
+            return [
+                'success' => false,
+                'message' => "An error occurred!",
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 
-    public function order(int $customer_id)
+    public function getOrderItems($id)
+    {
+        return OrderItems::query()
+            ->select(["*"])
+            ->where("order_id", $id)
+            ->get();
+    }
+
+    public function delete($id)
+    {
+        DB::beginTransaction();
+        try {
+            $order = $this->getOrderById($id);
+            $orderItems = $this->getOrderItems($id);
+            foreach($orderItems as $item) {
+                $item->delete();
+            }
+            $order->delete();
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("File: ".$e->getFile().'---Line: '.$e->getLine()."---Message: ".$e->getMessage());
+            return [
+                'success' => false,
+                'message' => "An error occurred!",
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
+    public function order(int $customer_id, $address_id)
     {
         DB::beginTransaction();
         try {
@@ -70,6 +118,7 @@ class OrderService {
             $order->discount = 0;
             $order->total = 0;
             $order->pay = 0;
+            $order->address_id = $address_id;
             $order->save();
 
             $cart = app(CartService::class)->getCart($customer_id);
@@ -109,7 +158,6 @@ class OrderService {
                 'order_id' => $order_id,
                 'product_id' => $productId,
                 'quantity' => $item['quantity'],
-                'status' => 0,
             ];
             $total += $item['total'];
         }
@@ -131,5 +179,26 @@ class OrderService {
                 'error' => $e->getMessage()
             ];
         }
+    }
+
+    public function search($keyword)
+    {
+        $orders = Order::whereHas('employee.account', function($query) use ($keyword) {
+            $query->where('first_name', 'like', "%{$keyword}%")
+                  ->orWhere('last_name', 'like', "%{$keyword}%")
+                  ->orWhere('email', 'like', "%{$keyword}%")
+                  ->orWhere('username', 'like', "%{$keyword}%")
+                  ->orWhere('phone', 'like', "%{$keyword}%");
+        })
+        ->orWhereHas('customer.account', function($query) use ($keyword) {
+            $query->where('first_name', 'like', "%{$keyword}%")
+                  ->orWhere('last_name', 'like', "%{$keyword}%")
+                  ->orWhere('email', 'like', "%{$keyword}%")
+                  ->orWhere('username', 'like', "%{$keyword}%")
+                  ->orWhere('phone', 'like', "%{$keyword}%");
+        })
+        ->get();
+
+        return $orders;
     }
 }

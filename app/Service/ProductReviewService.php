@@ -35,4 +35,34 @@ class ProductReviewService {
             ->where("product_id", $product_id)
             ->get();
     }
+
+    public function getAll()
+    {
+        return ProductReview::query()->get();
+    }
+
+    public function getReviewById($id)
+    {
+        return ProductReview::query()
+            ->find($id);
+    }
+
+    public function store(ProductReview $productReview ,$params)
+    {
+        DB::beginTransaction();
+        try {
+            $productReview->fill($params);
+            $productReview->save();
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("File: ".$e->getFile().'---Line: '.$e->getLine()."---Message: ".$e->getMessage());
+            return [
+                'success' => false,
+                'message' => "An error occurred!",
+                'error' => $e->getMessage()
+            ];
+        }
+    }
 }
