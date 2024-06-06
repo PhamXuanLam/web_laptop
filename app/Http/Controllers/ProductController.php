@@ -123,7 +123,7 @@ class ProductController extends Controller
                 $product->avatar = app(ImageService::class)->getImageUrl(Product::DIRECTORY_IMAGE . $product->id . "/", $avatar, Image::DEFAULT);
                 $temp = app(DescriptionService::class)->getDescriptionByProductId($product->id);
                 $descriptionRes = app(DescriptionService::class)->store($temp, $description);
-                
+
                 return response()->json([$product, $descriptionRes]);
             } else {
                 return response()->json([
@@ -191,7 +191,13 @@ class ProductController extends Controller
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
                 $product = app(ProductService::class)->getProductById($id);
-                return response()->json([$product]);
+                $description = app(DescriptionService::class)->getDescriptionByProductId($id);
+                $images = app(ImageService::class)->getImageByProductId($id);
+                $imagesResponse = [];
+                foreach($images as $image) {
+                    $imagesResponse[] = app(ImageService::class)->getImageUrl(Product::DIRECTORY_IMAGE . $id . "/", $image->name, Image::DEFAULT);
+                }
+                return response()->json([$product, $imagesResponse, $description]);
             } else {
                 return response()->json([
                     "status" => false,

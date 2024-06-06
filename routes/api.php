@@ -9,6 +9,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -46,6 +47,13 @@ Route::prefix("/customer")->group(function() {
     Route::prefix("/order")->group(function() {
         Route::post("/", [OrderController::class, "order"])->middleware("auth:account_api");
     });
+
+    /**
+     * Review Route
+     */
+    Route::prefix("/review")->group(function() {
+        Route::post("/", [ProductReviewController::class, "create"]);
+    })->middleware("auth:account_api");
 });
 
 /**
@@ -106,6 +114,7 @@ Route::prefix("/admin")->group(function() {
         Route::get("/", [ProductController::class, "index"]);
         Route::post("/create", [ProductController::class, "create"]);
         Route::put("/update/{id}", [ProductController::class, "update"])->where("id", "[0-9]+");
+        Route::get("/show/{id}", [ProductController::class, "show"])->where("id", "[0-9]+");
         Route::delete("/delete/{id}", [ProductController::class, "delete"])->where("id", "[0-9]+");
         Route::get("/search/{keyword}", [ProductController::class, "search"]);
         Route::get("/{filter}/{order}", [ProductController::class, "filter"]);
@@ -144,6 +153,18 @@ Route::prefix("/admin")->group(function() {
      */
     Route::prefix("/order")->group(function() {
         Route::get("/", [OrderController::class, "index"]);
+        Route::delete("/delete/{id}", [OrderController::class, "delete"])->where("id", "[0-9]+");
+        Route::put("/update/{id}", [OrderController::class, "update"])->where("id", "[0-9]+");
+        Route::get("/search/{keyword}", [OrderController::class, "search"]);
+    });
+
+     /**
+     * Quản lý đánh giá
+     */
+    Route::prefix("/review")->group(function() {
+        Route::get("/", [ProductReviewController::class, "index"]);
+        Route::delete("/delete/{id}", [ProductReviewController::class, "delete"])->where("id", "[0-9]+");
+        Route::get("/search/{keyword}", [ProductReviewController::class, "search"]);
     });
 
 })->middleware("auth:account_api");
