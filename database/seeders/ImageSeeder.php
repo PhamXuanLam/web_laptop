@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Image;
+use App\Models\Product;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +14,13 @@ class ImageSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $products = Product::get();
+        foreach($products as $product)
+        {
+            Image::factory()->create([
+                'product_id' => $product->id,
+                'name' => "default.jpg",
+            ]);
+        }
     }
 }

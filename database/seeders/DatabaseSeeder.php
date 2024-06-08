@@ -24,9 +24,10 @@ class DatabaseSeeder extends Seeder
         app(AdminSeeder::class)->run();
         app(CustomerSeeder::class)->run();
         app(EmployeeSeeder::class)->run();
-        app(StatusSeeder::class)->run();
         app(CategorySeeder::class)->run();
         app(SupplierSeeder::class)->run();
         app(ProductSeeder::class)->run();
+        app(ImageSeeder::class)->run();
+        app(DescriptionSeeder::class)->run();
     }
 }

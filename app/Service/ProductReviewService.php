@@ -47,6 +47,11 @@ class ProductReviewService {
             ->find($id);
     }
 
+    public function getEvaluateOfProduct($product_id)
+    {
+        return ProductReview::where('product_id', $product_id)->avg('rate') ?? 0;
+    }
+
     public function store(ProductReview $productReview ,$params)
     {
         DB::beginTransaction();

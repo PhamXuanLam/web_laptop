@@ -45,9 +45,17 @@ class ProductService {
 
     public function getProductById($id)
     {
-        return Product::query()
-            ->with(["images", "category", "description"])
-            ->find($id);
+        $product = Product::query()
+        ->with(["images", "category", "description"])
+        ->find($id);
+        $temp = [];
+        foreach($product->images as $image) {
+            $temp[] = app(ImageService::class)->getImageUrl(Product::DIRECTORY_IMAGE . $id . "/", $image->name, Image::DEFAULT);
+        }
+        unset($product->images);
+        $product->images = $temp;
+        $product->evaluate = app(ProductReviewService::class)->getEvaluateOfProduct($product->id);
+        return $product;
     }
 
     public function getProductBestseller($order)

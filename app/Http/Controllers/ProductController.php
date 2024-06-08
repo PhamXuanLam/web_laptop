@@ -9,6 +9,7 @@ use App\Models\Image;
 use App\Models\Product;
 use App\Service\DescriptionService;
 use App\Service\ImageService;
+use App\Service\ProductReviewService;
 use App\Service\ProductService;
 use Illuminate\Support\Facades\Auth;
 
@@ -81,11 +82,10 @@ class ProductController extends Controller
                 $images = $request->file('image'); // Đây sẽ là một mảng các file
                 $product = app(ProductService::class)->store(new Product(), $params);
                 app(ImageService::class)->store($product->id, Product::DIRECTORY_IMAGE, $images);
-                $avatar = app(ImageService::class)->getAvatar($product->id)->name;
-                $product->avatar = app(ImageService::class)->getImageUrl(Product::DIRECTORY_IMAGE . $product->id . "/", $avatar, Image::DEFAULT);
-                $descriptionRes = app(DescriptionService::class)->store(new Description(), $description, $product->id);
+                app(DescriptionService::class)->store(new Description(), $description, $product->id);
+                $response = app(ProductService::class)->getProductById($product->id);
 
-                return response()->json([$product, $descriptionRes]);
+                return response()->json($response);
             } else {
                 return response()->json([
                     "status" => false,
@@ -119,12 +119,12 @@ class ProductController extends Controller
                 $images = $request->file('image');
                 $product = app(ProductService::class)->store(Product::find($id), $params);
                 app(ImageService::class)->store($product->id, Product::DIRECTORY_IMAGE, $images);
-                $avatar = app(ImageService::class)->getAvatar($product->id)->name;
-                $product->avatar = app(ImageService::class)->getImageUrl(Product::DIRECTORY_IMAGE . $product->id . "/", $avatar, Image::DEFAULT);
                 $temp = app(DescriptionService::class)->getDescriptionByProductId($product->id);
-                $descriptionRes = app(DescriptionService::class)->store($temp, $description);
+                app(DescriptionService::class)->store($temp, $description);
 
-                return response()->json([$product, $descriptionRes]);
+                $response = app(ProductService::class)->getProductById($id);
+
+                return response()->json($response);
             } else {
                 return response()->json([
                     "status" => false,
@@ -191,13 +191,8 @@ class ProductController extends Controller
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
                 $product = app(ProductService::class)->getProductById($id);
-                $description = app(DescriptionService::class)->getDescriptionByProductId($id);
-                $images = app(ImageService::class)->getImageByProductId($id);
-                $imagesResponse = [];
-                foreach($images as $image) {
-                    $imagesResponse[] = app(ImageService::class)->getImageUrl(Product::DIRECTORY_IMAGE . $id . "/", $image->name, Image::DEFAULT);
-                }
-                return response()->json([$product, $imagesResponse, $description]);
+
+                return response()->json($product);
             } else {
                 return response()->json([
                     "status" => false,
