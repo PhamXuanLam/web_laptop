@@ -85,10 +85,10 @@ class ProductReviewController extends Controller
         $account = Auth::guard('account_api')->user();
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
-                $res = app(ProductReview::class)->getAll();
-                return response()->json([
+                $res = app(ProductReviewService::class)->getAll();
+                return response()->json(
                     $res
-                ]);
+                );
             } else {
                 return response()->json([
                     "status" => false,
