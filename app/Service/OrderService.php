@@ -17,7 +17,9 @@ class OrderService {
                 "employee",
                 "customer",
                 "orderItems" => function($query) {
-                    $query->select("order_id", "product_id", "quantity");
+                    $query
+                        ->select("order_id", "product_id", "quantity")
+                        ->with("product:id,name,price");
                 }
             ])
             ->get();

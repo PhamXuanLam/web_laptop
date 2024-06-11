@@ -16,9 +16,7 @@ class CategoryController extends Controller
     public function show(int $category_id) {
         $category = app(CategoryService::class)->getCategory($category_id);
 
-        return response()->json([
-            $category
-        ]);
+        return response()->json($category->products);
     }
 
     public function brands(int $category_id) {

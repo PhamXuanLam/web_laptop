@@ -59,11 +59,18 @@ class EmployeeService
             ->first();
     }
 
+    public function getNameById($id)
+    {
+        $employee = $this->getEmployeeById($id);
+        $name = $employee->account->first_name . " " . $employee->account->last_name;
+        return $name;
+    }
+
     public function getEmployeeById($id)
     {
         return Employee::query()
         ->select(["*"])
-        ->with(['address' => function($query) {
+        ->with(["account",'address' => function($query) {
             $query->select(['id', 'name', 'province_id', 'district_id', 'commune_id']);
         }])
         ->find($id);

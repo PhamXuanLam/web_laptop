@@ -51,6 +51,13 @@ class CustomerService {
             ->first();
     }
 
+    public function getNameById($id)
+    {
+        $customer = $this->getCustomerById($id);
+        $name = $customer->account->first_name . " " . $customer->account->last_name;
+        return $name;
+    }
+
     public function getCustomerById($id) {
         return Customer::query()
             ->select(["*"])

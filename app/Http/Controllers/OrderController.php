@@ -8,7 +8,9 @@ use App\Models\Employee;
 use App\Service\AccountService;
 use App\Service\AddressService;
 use App\Service\CustomerService;
+use App\Service\EmployeeService;
 use App\Service\OrderService;
+use App\Service\ProductService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -125,13 +127,21 @@ class OrderController extends Controller
                 $orders = app(OrderService::class)->getAll();
                 $res = [];
                 foreach($orders as $order) {
+                    $orderItems = [];
+                    foreach($order->orderItems as $item){
+                        $orderItems[] = [
+                            'product' => $item->product->name,
+                            'quantity' => $item->quantity,
+                            'price' => $item->product->price
+                        ];
+                    }
                     $res[] = [
                         "id" => $order->id,
-                        "employee_id" => $order->employee_id,
-                        "customer_id" => $order->customer_id,
+                        "employee" => app(EmployeeService::class)->getNameById($order->employee_id),
+                        "customer" => app(CustomerService::class)->getNameById($order->customer_id),
                         "created_at" => $order->created_at,
                         "total" => $order->total,
-                        "order_items" => $order->orderItems
+                        "order_items" => $orderItems
                     ];
                 }
                 return response()->json(
