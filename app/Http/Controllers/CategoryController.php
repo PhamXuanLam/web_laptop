@@ -17,7 +17,7 @@ class CategoryController extends Controller
         $category = app(CategoryService::class)->getCategory($category_id);
 
         return response()->json([
-            "data" => $category
+            $category
         ]);
     }
 

@@ -126,10 +126,12 @@ class OrderController extends Controller
                 $res = [];
                 foreach($orders as $order) {
                     $res[] = [
+                        "id" => $order->id,
                         "employee_id" => $order->employee_id,
                         "customer_id" => $order->customer_id,
                         "created_at" => $order->created_at,
                         "total" => $order->total,
+                        "order_items" => $order->orderItems
                     ];
                 }
                 return response()->json(

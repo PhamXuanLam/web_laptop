@@ -13,7 +13,13 @@ class OrderService {
     {
         return Order::query()
             ->select(["*"])
-            ->with(["employee", "customer"])
+            ->with([
+                "employee",
+                "customer",
+                "orderItems" => function($query) {
+                    $query->select("order_id", "product_id", "quantity");
+                }
+            ])
             ->get();
     }
 
