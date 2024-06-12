@@ -27,17 +27,14 @@ class Order extends Model
     public function getStatusLabel()
     {
         switch ($this->status) {
-            case self::STATUS_NOT_APPROVED:
-                return self::STATUS_NOT_APPROVED_LABEL;
-                break;
-
             case self::STATUS_APPROVED:
                 return self::STATUS_APPROVED_LABEL;
-                break;
+
+            case self::STATUS_NOT_APPROVED:
+                return self::STATUS_NOT_APPROVED_LABEL;
 
             default:
-                self::STATUS_PENDING_LABEL;
-                break;
+                return self::STATUS_PENDING_LABEL;
         }
     }
 

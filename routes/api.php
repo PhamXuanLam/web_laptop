@@ -156,6 +156,7 @@ Route::prefix("/admin")->group(function() {
         Route::delete("/delete/{id}", [OrderController::class, "delete"])->where("id", "[0-9]+");
         Route::put("/update/{id}", [OrderController::class, "update"])->where("id", "[0-9]+");
         Route::get("/search/{keyword}", [OrderController::class, "search"]);
+        Route::get("/show/{id}", [OrderController::class, "show"])->where("id", "[0-9]+");
     });
 
      /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrderRequest;
 use App\Models\Admin;
 use App\Models\Employee;
+use App\Models\Order;
 use App\Service\AccountService;
 use App\Service\AddressService;
 use App\Service\CustomerService;
@@ -141,6 +142,7 @@ class OrderController extends Controller
                         "customer" => app(CustomerService::class)->getNameById($order->customer_id),
                         "created_at" => $order->created_at,
                         "total" => $order->total,
+                        "status" => $order->getStatusLabel(),
                         "order_items" => $orderItems
                     ];
                 }
@@ -215,9 +217,29 @@ class OrderController extends Controller
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
                 $order = app(OrderService::class)->getOrderById($id);
-                return response()->json([
-                    $order
-                ]);
+                $orderItems = [];
+                foreach($order->orderItems as $item){
+                    $orderItems[] = [
+                        'product' => $item->product->name,
+                        'quantity' => $item->quantity,
+                        'price' => $item->product->price
+                    ];
+                }
+                $res = [
+                    "id" => $order->id,
+                    "employee" => app(EmployeeService::class)->getNameById($order->employee_id),
+                    "customer" => app(CustomerService::class)->getNameById($order->customer_id),
+                    "total" => $order->total,
+                    "status" => $order->getStatusLabel(),
+                    'tax' => $order->tax,
+                    'discount' => $order->discount,
+                    'pay'=> $order->pay,
+                    "created_at" => $order->created_at,
+                    "update_at" => $order->updated_at,
+                    'address' => app(AddressService::class)->getAddress("", "", "", $order->address_id)->name,
+                    "order_items" => $orderItems
+                ];
+                return response()->json($res);
             } else {
                 return response()->json([
                     "status" => false,
