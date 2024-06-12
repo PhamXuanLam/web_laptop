@@ -171,5 +171,6 @@ Route::prefix("/admin")->group(function() {
 
     Route::prefix("/statistical")->group(function() {
         Route::get("/sumOrder", [StatisticalController::class, "sumOrder"]);
+        Route::get("/sumProduct", [StatisticalController::class, "sumProduct"]);
     });
 })->middleware("auth:account_api");
