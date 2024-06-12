@@ -10,6 +10,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductReviewController;
+use App\Http\Controllers\StatisticalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -168,4 +169,7 @@ Route::prefix("/admin")->group(function() {
         Route::get("/search/{keyword}", [ProductReviewController::class, "search"]);
     });
 
+    Route::prefix("/statistical")->group(function() {
+        Route::get("/sumOrder", [StatisticalController::class, "sumOrder"]);
+    });
 })->middleware("auth:account_api");
