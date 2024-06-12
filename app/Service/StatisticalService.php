@@ -8,7 +8,18 @@ class StatisticalService {
     public function getMonthlyOrders($year)
     {
         return Order::whereYear('created_at', $year)
+            ->where("status", 2)
             ->selectRaw('MONTH(created_at) as month, COUNT(*) as total_orders')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+    }
+
+    public function getMonthlyRevenue($year)
+    {
+        return Order::whereYear('created_at', $year)
+            ->where('status', 2)
+            ->selectRaw('MONTH(created_at) as month, SUM(pay) as total_revenue')
             ->groupBy('month')
             ->orderBy('month')
             ->get();
