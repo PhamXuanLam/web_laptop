@@ -29,11 +29,18 @@ class StatisticalService {
 
     public function getMonthlyQuantity($year)
     {
-        return OrderItems::whereYear('created_at', $year)
+        $monthlyData = OrderItems::whereYear('created_at', $year)
             ->selectRaw('MONTH(created_at) as month, SUM(quantity) as total_quantity')
             ->groupBy('month')
             ->orderBy('month')
             ->get();
+
+        $monthlyData = $monthlyData->map(function ($item) {
+            $item->total_quantity = (int)$item->total_quantity;
+            return $item;
+        });
+
+        return $monthlyData;
     }
 
     public function getCategoryRevenue()
