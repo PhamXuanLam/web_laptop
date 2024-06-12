@@ -205,6 +205,15 @@ class OrderService {
                   ->orWhere('username', 'like', "%{$keyword}%")
                   ->orWhere('phone', 'like', "%{$keyword}%");
         })
+        ->with([
+            "employee",
+            "customer",
+            "orderItems" => function($query) {
+                $query
+                    ->select("order_id", "product_id", "quantity")
+                    ->with("product:id,name,price");
+            }
+        ])
         ->get();
 
         return $orders;

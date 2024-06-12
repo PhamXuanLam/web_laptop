@@ -282,10 +282,28 @@ class OrderController extends Controller
         $account = Auth::guard('account_api')->user();
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
-                $res = app(OrderService::class)->search($keyword);
-                return response()->json([
-                    $res
-                ]);
+                $orders = app(OrderService::class)->search($keyword);
+                $res = [];
+                foreach($orders as $order) {
+                    $orderItems = [];
+                    foreach($order->orderItems as $item){
+                        $orderItems[] = [
+                            'product' => $item->product->name,
+                            'quantity' => $item->quantity,
+                            'price' => $item->product->price
+                        ];
+                    }
+                    $res[] = [
+                        "id" => $order->id,
+                        "employee" => app(EmployeeService::class)->getNameById($order->employee_id),
+                        "customer" => app(CustomerService::class)->getNameById($order->customer_id),
+                        "created_at" => $order->created_at,
+                        "total" => $order->total,
+                        "status" => $order->getStatusLabel(),
+                        "order_items" => $orderItems
+                    ];
+                }
+                return response()->json($res);
             } else {
                 return response()->json([
                     "status" => false,
