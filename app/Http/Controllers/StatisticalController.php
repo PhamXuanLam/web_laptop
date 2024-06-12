@@ -101,12 +101,12 @@ class StatisticalController extends Controller
         }
     }
 
-    public function monthlyQuantityInYear($month)
+    public function monthlyQuantity($year)
     {
         $account = Auth::guard('account_api')->user();
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {
-                $res = app(StatisticalService::class)->getMonthlyQuantityInYear($month);
+                $res = app(StatisticalService::class)->getMonthlyQuantity($year);
                 return response()->json($res);
             } else {
                 return response()->json([

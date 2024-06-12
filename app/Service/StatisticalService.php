@@ -27,15 +27,12 @@ class StatisticalService {
             ->get();
     }
 
-    public function getMonthlyQuantityInYear($month)
+    public function getMonthlyQuantity($year)
     {
-        return OrderItems::whereMonth('created_at', $month)
-            ->select(
-                DB::raw('YEAR(created_at) as year'),
-                DB::raw('SUM(quantity) as total_quantity')
-            )
-            ->groupBy(DB::raw('YEAR(created_at)'))
-            ->orderBy(DB::raw('YEAR(created_at)'))
+        return OrderItems::whereYear('created_at', $year)
+            ->selectRaw('MONTH(created_at) as month, SUM(quantity) as total_quantity')
+            ->groupBy('month')
+            ->orderBy('month')
             ->get();
     }
 
