@@ -100,4 +100,45 @@ class StatisticalController extends Controller
             ]);
         }
     }
+
+    public function monthlyQuantityInYear($month)
+    {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                $res = app(StatisticalService::class)->getMonthlyQuantityInYear($month);
+                return response()->json($res);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
+
+    public function categoryRevenue() {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                $res = app(StatisticalService::class)->getCategoryRevenue();
+                return response()->json($res);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
 }
