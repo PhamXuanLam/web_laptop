@@ -31,18 +31,18 @@ class CustomerRequest extends FormRequest
             "first_name" => "required|string|max:20",
             "last_name" => "required|string|max:20",
             'birth_day' => "nullable|date",
-            'avatar' => "nullable|image|mimes:jpeg,png,jpg,gif|max:2048", 
+            'avatar' => "nullable|image|mimes:jpeg,png,jpg,gif|max:2048",
             'role'=> "nullable|string",
-            'province_id' => "nullable|numeric|exists:provinces,id", 
-            'district_id' => "nullable|numeric|exists:districts,id", 
+            'province_id' => "nullable|numeric|exists:provinces,id",
+            'district_id' => "nullable|numeric|exists:districts,id",
             'commune_id' => "nullable|numeric|exists:communes,id"
         ];
-    
+
         // Kiểm tra nếu là "đăng ký" thì thêm quy tắc cho trường "password"
         if ($this->isMethod('post')) {
-            $rules['password'] = 'required|confirmed';
+            $rules['password'] = 'required';
         }
-    
+
         return $rules;
     }
 
@@ -71,7 +71,7 @@ class CustomerRequest extends FormRequest
     //         'confirmed' => ':attribute do not match!'
     //     ];
     // }
-    
+
     /**
      * @overrride
      * Handle a failed validation attempt.
@@ -81,7 +81,7 @@ class CustomerRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function failedValidation(Validator $validator) 
+    protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json($validator->errors(), 422));
     }
