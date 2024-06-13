@@ -16,22 +16,24 @@ class OrderItemsSeeder extends Seeder
     {
         for($i = 1; $i <= 10000; $i++) {
             $year = rand(2018, 2024);
+
             if ($year == 2024) {
                 $currentDate = Carbon::now();
-                $month = $currentDate->month;
-                $day = $currentDate->day;
-                $hour = $currentDate->hour;
-                $minute = $currentDate->minute;
-                $second = $currentDate->second;
+                $startOfYear = Carbon::create($year, 1, 1, 0, 0, 0);
+                $endOfYear = $currentDate;
+
+                // Tạo ngày ngẫu nhiên từ đầu năm đến thời điểm hiện tại
+                $randomTimestamp = rand($startOfYear->timestamp, $endOfYear->timestamp);
+                $date = Carbon::createFromTimestamp($randomTimestamp);
             } else {
                 // Nếu không phải năm 2024, lấy ngày ngẫu nhiên
                 $month = rand(1, 12);
-                $day = rand(1, 28);
+                $day = rand(1, Carbon::create($year, $month)->daysInMonth); // Chọn ngày hợp lệ trong tháng
                 $hour = rand(0, 23);
                 $minute = rand(0, 59);
                 $second = rand(0, 59);
+                $date = Carbon::create($year, $month, $day, $hour, $minute, $second);
             }
-            $date = Carbon::create($year, $month, $day, $hour, $minute, $second);
             OrderItems::factory()->create([
                 "order_id" => $i,
                 "product_id" => random_int(1, 120),
