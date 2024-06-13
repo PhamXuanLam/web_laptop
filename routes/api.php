@@ -78,10 +78,10 @@ Route::prefix("/product")->group(function() {
  * Cart Route
  */
 Route::prefix("/cart")->group(function() {
-    Route::post("/addToCart", [CartController::class, "addToCart"]);
     Route::get("/", [CartController::class, 'index']);
-    Route::put("/updateCart", [CartController::class, "updateCart"]);
-    Route::delete("/removeCart", [CartController::class, "removeCart"]);
+    Route::post("/addToCart/{product_id}", [CartController::class, "addToCart"])->where("product_id", "[0-9]+");
+    Route::put("/updateCart/{product_id}", [CartController::class, "updateCart"])->where("product_id", "[0-9]+");
+    Route::delete("/removeCart/{product_id}", [CartController::class, "removeCart"])->where("product_id", "[0-9]+");
     Route::get("/checkout", [CartController::class, "checkout"])->middleware("auth:account_api");
 });
 
@@ -93,7 +93,11 @@ Route::prefix("/employee")->group(function(){
     Route::put("/order/accept/{id}", [OrderController::class, "accept"])->where("id", "[0-9]+");
 })->middleware("auth:account_api");
 
-Route::get("product/show/{id}", [ProductController::class, "show"])->where("id", "[0-9]+");
+Route::prefix("/product")->group(function() {
+    Route::get("/search/{keyword}", [ProductController::class, "search"]);
+    Route::get("/{filter}/{order}", [ProductController::class, "filter"]);
+    Route::get("/show/{id}", [ProductController::class, "show"])->where("id", "[0-9]+");
+});
 
 /**
  * Admin Route
@@ -118,8 +122,6 @@ Route::prefix("/admin")->group(function() {
         Route::post("/create", [ProductController::class, "create"]);
         Route::put("/update/{id}", [ProductController::class, "update"])->where("id", "[0-9]+");
         Route::delete("/delete/{id}", [ProductController::class, "delete"])->where("id", "[0-9]+");
-        Route::get("/search/{keyword}", [ProductController::class, "search"]);
-        Route::get("/{filter}/{order}", [ProductController::class, "filter"]);
     });
     /**
      * Quản lý hình ảnh sản phẩm

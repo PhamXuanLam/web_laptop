@@ -18,13 +18,13 @@ class CartController extends Controller
         $this->customerService = app(CustomerService::class);
     }
 
-    public function addToCart(Request $request)
+    public function addToCart($product_id)
     {
         if(Auth::guard('account_api')->check()) {
             $customer = $this->customerService->getCustomerByAccountId(Auth::guard('account_api')->id());
-            $response = $this->cartService->addToCart($request->product_id, $customer->id);
+            $response = $this->cartService->addToCart($product_id, $customer->id);
         } else {
-            $response = $this->cartService->addToCart($request->product_id);
+            $response = $this->cartService->addToCart($product_id);
         }
 
         return response()->json($response);
@@ -42,31 +42,31 @@ class CartController extends Controller
         return response()->json(["cart" => $cart]);
     }
 
-    public function removeCart(Request $request)
+    public function removeCart($product_id)
     {
         if(Auth::guard('account_api')->check()) {
             $customer = $this->customerService->getCustomerByAccountId(Auth::guard('account_api')->id());
-            $response = $this->cartService->removeCart($request->product_id, $customer->id);
+            $response = $this->cartService->removeCart($product_id, $customer->id);
         } else {
-            $response = $this->cartService->removeCart($request->product_id);
+            $response = $this->cartService->removeCart($product_id);
         }
 
         return response()->json($response);
     }
 
-    public function updateCart(Request $request)
+    public function updateCart(Request $request, $product_id)
     {
         if(Auth::guard('account_api')->check()) {
             $customer = $this->customerService->getCustomerByAccountId(Auth::guard('account_api')->id());
-            $response = $this->cartService->updateCart($request->product_id, $request->quantity, $customer->id);
+            $response = $this->cartService->updateCart($product_id, $request->quantity, $customer->id);
         } else {
-            $response = $this->cartService->updateCart($request->product_id, $request->quantity);
+            $response = $this->cartService->updateCart($product_id, $request->quantity);
         }
 
         return response()->json($response);
     }
 
-    public function checkout() 
+    public function checkout()
     {
         $account = Auth::guard('account_api')->user();
         if($account) {

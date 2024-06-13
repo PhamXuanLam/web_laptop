@@ -12,7 +12,7 @@ class CartService {
     /**
      * add product in cart
      */
-    public function addToCart(int $product_id, int $customer_id = null) 
+    public function addToCart(int $product_id, int $customer_id = null)
     {
         $product = Product::find($product_id);
 
@@ -31,7 +31,7 @@ class CartService {
                     "customer_id" => $customer_id,
                     "product_id" => $product_id
                 ]);
-    
+
                 $cart->quantity = $cart->exists ? $cart->quantity + 1 : 1;
                 $cart->product_name = $product->name;
                 $cart->price = $product->price;
@@ -76,7 +76,7 @@ class CartService {
     /**
      * Get cart
      */
-    public function getCart(int $customer_id = null) 
+    public function getCart(int $customer_id = null)
     {
         $cart = $customer_id
             ? Cart::where('customer_id', $customer_id)->get()
@@ -95,8 +95,8 @@ class CartService {
         })->filter()->keyBy('product_id')->toArray();
 
         return $cart;
-    } 
-    
+    }
+
     /**
      * Remove item in carts
      */
@@ -164,6 +164,9 @@ class CartService {
                 ]);
                 $cart->quantity = $quantity;
                 $cart->total = $quantity * $product->price;
+                $cart->product_name = $product->name;
+                $cart->price = $product->price;
+                $cart->status = 1;
                 $cart->save();
                 DB::commit();
 
@@ -214,7 +217,7 @@ class CartService {
                     "customer_id" => $customer_id,
                     "product_id" => $cartItem['product_id']
                 ]);
-    
+
                 $cart->quantity = $cart->exists ? $cart->quantity + $cartItem["quantity"] : $cartItem["quantity"];
                 $cart->product_name = $cartItem["product_name"];
                 $cart->price = $cartItem["price"];
