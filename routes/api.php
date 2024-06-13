@@ -70,8 +70,11 @@ Route::prefix("/category")->group(function() {
  * Product Route
  */
 Route::prefix("/product")->group(function() {
+    Route::get("/show/{id}", [ProductController::class, "show"])->where("id", "[0-9]+");
     Route::get("/brand/{brand}", [ProductController::class, "brand"]);
     Route::get("/demands", [ProductController::class, "demands"]);
+    Route::get("/search/{keyword}", [ProductController::class, "search"]);
+    Route::get("/{filter}/{order}", [ProductController::class, "filter"]);
 });
 
 /**
@@ -92,12 +95,6 @@ Route::prefix("/employee")->group(function(){
     Route::get("/order/pending", [OrderController::class, "getOrderPending"]);
     Route::put("/order/accept/{id}", [OrderController::class, "accept"])->where("id", "[0-9]+");
 })->middleware("auth:account_api");
-
-Route::prefix("/product")->group(function() {
-    Route::get("/search/{keyword}", [ProductController::class, "search"]);
-    Route::get("/{filter}/{order}", [ProductController::class, "filter"]);
-    Route::get("/show/{id}", [ProductController::class, "show"])->where("id", "[0-9]+");
-});
 
 /**
  * Admin Route
