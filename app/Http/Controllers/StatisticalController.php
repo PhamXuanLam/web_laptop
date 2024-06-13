@@ -80,6 +80,61 @@ class StatisticalController extends Controller
             ]);
         }
     }
+
+    public function decisionSupportMonthlyOrders($year)
+    {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                $orders = app(StatisticalService::class)->getMonthlyOrders($year);
+                $ordersArray = $orders->toArray();
+
+                // Tính toán giá trị max và min của total_orders
+                $totalOrders = array_column($ordersArray, 'total_orders');
+                $maxOrders = max($totalOrders);
+                $minOrders = min($totalOrders);
+                return response()->json(["max" => $maxOrders, "min" => $minOrders]);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
+
+    public function decisionSupportMonthlyRevenue($year)
+    {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                $res = app(StatisticalService::class)->getMonthlyRevenue($year);
+                $ordersArray = $res->toArray();
+
+                // Tính toán giá trị max và min của total_orders
+                $totalOrders = array_column($ordersArray, 'total_revenue');
+                $maxOrders = max($totalOrders);
+                $minOrders = min($totalOrders);
+                return response()->json(["max" => $maxOrders, "min" => $minOrders]);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
+
     public function monthlyRevenue($year)
     {
         $account = Auth::guard('account_api')->user();
@@ -101,6 +156,32 @@ class StatisticalController extends Controller
         }
     }
 
+    public function decisionSupportMonthlyQuantity($year)
+    {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                $res = app(StatisticalService::class)->getMonthlyQuantity($year);
+                $ordersArray = $res->toArray();
+
+                // Tính toán giá trị max và min của total_orders
+                $totalOrders = array_column($ordersArray, 'total_quantity');
+                $maxOrders = max($totalOrders);
+                $minOrders = min($totalOrders);
+                return response()->json(["max" => $maxOrders, "min" => $minOrders]);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
     public function monthlyQuantity($year)
     {
         $account = Auth::guard('account_api')->user();
@@ -122,7 +203,34 @@ class StatisticalController extends Controller
         }
     }
 
-    public function categoryRevenue() {
+    public function decisionSupportCategoryRevenue()
+    {
+        $account = Auth::guard('account_api')->user();
+        if($account) {
+            if($account->role === Admin::ADMIN_ROLE) {
+                $res = app(StatisticalService::class)->getCategoryRevenue();
+                $ordersArray = $res->toArray();
+
+                // Tính toán giá trị max và min của total_orders
+                $totalOrders = array_column($ordersArray, 'total_revenue');
+                $maxOrders = max($totalOrders);
+                $minOrders = min($totalOrders);
+                return response()->json(["max" => $maxOrders, "min" => $minOrders]);
+            } else {
+                return response()->json([
+                    "status" => false,
+                    "message" => "You do not have access!",
+                ]);
+            }
+        } else {
+            return response()->json([
+                "status" => false,
+                "message" => "Please login!",
+            ]);
+        }
+    }
+    public function categoryRevenue()
+    {
         $account = Auth::guard('account_api')->user();
         if($account) {
             if($account->role === Admin::ADMIN_ROLE) {

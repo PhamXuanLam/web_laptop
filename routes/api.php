@@ -176,5 +176,9 @@ Route::prefix("/admin")->group(function() {
         Route::get("/monthlyOrders/{year}", [StatisticalController::class, "monthlyOrders"]);
         Route::get("/monthlyRevenue/{year}", [StatisticalController::class, "monthlyRevenue"]);
         Route::get("/monthlyQuantity/{year}", [StatisticalController::class, "monthlyQuantity"]);
+        Route::get("/decisionSupportMonthlyOrders/{year}", [StatisticalController::class, "decisionSupportMonthlyOrders"]);
+        Route::get("/decisionSupportMonthlyRevenue/{year}", [StatisticalController::class, "decisionSupportMonthlyRevenue"]);
+        Route::get("/decisionSupportMonthlyQuantity/{year}", [StatisticalController::class, "decisionSupportMonthlyQuantity"]);
+        Route::get("/decisionSupportCategoryRevenue/{year}", [StatisticalController::class, "decisionSupportCategoryRevenue"]);
     });
 })->middleware("auth:account_api");
