@@ -74,6 +74,7 @@ Route::prefix("/product")->group(function() {
     Route::get("/brand/{brand}", [ProductController::class, "brand"]);
     Route::get("/demands", [ProductController::class, "demands"]);
     Route::get("/filterProductsByPrice/{range}", [ProductController::class, "filterProductsByPrice"]);
+    Route::get("/filterProductsByColor/{color}", [ProductController::class, "filterProductsByColor"]);
     Route::get("/search/{keyword}", [ProductController::class, "search"]);
     Route::get("/{filter}/{order}", [ProductController::class, "filter"]);
 });

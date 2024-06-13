@@ -221,6 +221,16 @@ class ProductController extends Controller
         return response()->json($response);
     }
 
+    public function filterProductsByColor($color)
+    {
+        $products = Product::where('color', $color)->get();
+        $response = [];
+        foreach($products as $product) {
+            $response[] = app(ProductService::class)->getProductById($product->id);
+        }
+        return response()->json($response);
+    }
+
     public function delete(string $id)
     {
         $account = Auth::guard('account_api')->user();
