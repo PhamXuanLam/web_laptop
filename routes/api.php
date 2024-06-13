@@ -86,6 +86,7 @@ Route::prefix("/cart")->group(function() {
     Route::put("/updateCart/{product_id}", [CartController::class, "updateCart"])->where("product_id", "[0-9]+");
     Route::delete("/removeCart/{product_id}", [CartController::class, "removeCart"])->where("product_id", "[0-9]+");
     Route::get("/checkout", [CartController::class, "checkout"])->middleware("auth:account_api");
+    Route::get("/sumQuantity", [CartController::class, 'sumQuantity']);
 });
 
 /**

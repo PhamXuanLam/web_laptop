@@ -66,6 +66,18 @@ class CartController extends Controller
         return response()->json($response);
     }
 
+    public function sumQuantity()
+    {
+        if(Auth::guard('account_api')->check()) {
+            $customer = $this->customerService->getCustomerByAccountId(Auth::guard('account_api')->id());
+            $cart = $this->cartService->getCart($customer->id);
+            $totalQuantity = $cart->sum('quantity');
+
+            return response()->json($totalQuantity);
+        }
+
+    }
+
     public function checkout()
     {
         $account = Auth::guard('account_api')->user();
