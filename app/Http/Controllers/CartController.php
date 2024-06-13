@@ -39,7 +39,7 @@ class CartController extends Controller
             $cart = $this->cartService->getCart();
         }
 
-        return response()->json([$cart]);
+        return response()->json($cart);
     }
 
     public function removeCart($product_id)

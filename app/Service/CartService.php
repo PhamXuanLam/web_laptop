@@ -92,7 +92,7 @@ class CartService {
             }
 
             return null;
-        })->filter()->keyBy('product_id')->toArray();
+        })->filter()->keyBy('product_id');
 
         return $cart;
     }
