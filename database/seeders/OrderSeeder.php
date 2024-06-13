@@ -25,7 +25,6 @@ class OrderSeeder extends Seeder
         foreach($orderItems as $item) {
             $product = Product::query()->find($item->product_id);
             Order::factory()->create([
-                'id' => $item->id,
                 "customer_id" => $customers->random()->id,
                 "employee_id" => $employees->random()->id,
                 "address_id" => $address->random()->id,

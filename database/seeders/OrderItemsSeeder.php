@@ -14,11 +14,25 @@ class OrderItemsSeeder extends Seeder
      */
     public function run(): void
     {
-        for($i = 1; $i <= 1000; $i++) {
+        for($i = 1; $i <= 10000; $i++) {
             $year = rand(2018, 2024);
-            $date = Carbon::create($year, rand(1, 12), rand(1, 28), rand(0, 23), rand(0, 59), rand(0, 59));
+            if ($year == 2024) {
+                $currentDate = Carbon::now();
+                $month = $currentDate->month;
+                $day = $currentDate->day;
+                $hour = $currentDate->hour;
+                $minute = $currentDate->minute;
+                $second = $currentDate->second;
+            } else {
+                // Nếu không phải năm 2024, lấy ngày ngẫu nhiên
+                $month = rand(1, 12);
+                $day = rand(1, 28);
+                $hour = rand(0, 23);
+                $minute = rand(0, 59);
+                $second = rand(0, 59);
+            }
+            $date = Carbon::create($year, $month, $day, $hour, $minute, $second);
             OrderItems::factory()->create([
-                'id' => $i,
                 "order_id" => $i,
                 "product_id" => random_int(1, 120),
                 "quantity" => random_int(1, 10),
