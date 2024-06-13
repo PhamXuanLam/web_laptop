@@ -27,7 +27,7 @@ class CartController extends Controller
             $response = $this->cartService->addToCart($product_id);
         }
 
-        return response()->json([$response]);
+        return response()->json($response);
     }
 
     public function index()
@@ -39,7 +39,7 @@ class CartController extends Controller
             $cart = $this->cartService->getCart();
         }
 
-        return response()->json(["cart" => $cart]);
+        return response()->json([$cart]);
     }
 
     public function removeCart($product_id)
@@ -63,7 +63,7 @@ class CartController extends Controller
             $response = $this->cartService->updateCart($product_id, $request->quantity);
         }
 
-        return response()->json([$response]);
+        return response()->json($response);
     }
 
     public function checkout()
