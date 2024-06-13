@@ -93,6 +93,8 @@ Route::prefix("/employee")->group(function(){
     Route::put("/order/accept/{id}", [OrderController::class, "accept"])->where("id", "[0-9]+");
 })->middleware("auth:account_api");
 
+Route::get("product/show/{id}", [ProductController::class, "show"])->where("id", "[0-9]+");
+
 /**
  * Admin Route
  */
@@ -115,7 +117,6 @@ Route::prefix("/admin")->group(function() {
         Route::get("/", [ProductController::class, "index"]);
         Route::post("/create", [ProductController::class, "create"]);
         Route::put("/update/{id}", [ProductController::class, "update"])->where("id", "[0-9]+");
-        Route::get("/show/{id}", [ProductController::class, "show"])->where("id", "[0-9]+");
         Route::delete("/delete/{id}", [ProductController::class, "delete"])->where("id", "[0-9]+");
         Route::get("/search/{keyword}", [ProductController::class, "search"]);
         Route::get("/{filter}/{order}", [ProductController::class, "filter"]);

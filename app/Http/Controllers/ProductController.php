@@ -187,24 +187,9 @@ class ProductController extends Controller
 
     public function show(string $id)
     {
-        $account = Auth::guard('account_api')->user();
-        if($account) {
-            if($account->role === Admin::ADMIN_ROLE) {
-                $product = app(ProductService::class)->getProductById($id);
+        $product = app(ProductService::class)->getProductById($id);
 
-                return response()->json($product);
-            } else {
-                return response()->json([
-                    "status" => false,
-                    "message" => "You do not have access!",
-                ]);
-            }
-        } else {
-            return response()->json([
-                "status" => false,
-                "message" => "Please login!",
-            ]);
-        }
+        return response()->json($product);
     }
 
     public function delete(string $id)
