@@ -103,6 +103,8 @@ Route::prefix("/employee")->group(function(){
  * Admin Route
  */
 Route::prefix("/admin")->group(function() {
+
+    Route::get("/name", [AuthController::class, "getNameAdmin"]);
     /**
      * Quản lý nhân viên
      */
