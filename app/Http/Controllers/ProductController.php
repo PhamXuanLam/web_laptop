@@ -192,6 +192,35 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
+    public function filterProductsByPrice($range)
+    {
+        switch ($range) {
+            case 'under_15000':
+                $products = Product::where('price', '<', 15000)->get();
+                break;
+            case '15000_20000':
+                $products = Product::whereBetween('price', [15000, 20000])->get();
+                break;
+            case '20000_30000':
+                $products = Product::whereBetween('price', [20000, 30000])->get();
+                break;
+            case '30000_40000':
+                $products = Product::whereBetween('price', [30000, 40000])->get();
+                break;
+            case 'over_40000':
+                $products = Product::where('price', '>', 40000)->get();
+                break;
+            default:
+                $products = Product::all();
+                break;
+        }
+        $response = [];
+        foreach($products as $product) {
+            $response[] = app(ProductService::class)->getProductById($product->id);
+        }
+        return response()->json($response);
+    }
+
     public function delete(string $id)
     {
         $account = Auth::guard('account_api')->user();

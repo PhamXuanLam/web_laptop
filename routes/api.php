@@ -73,6 +73,7 @@ Route::prefix("/product")->group(function() {
     Route::get("/show/{id}", [ProductController::class, "show"])->where("id", "[0-9]+");
     Route::get("/brand/{brand}", [ProductController::class, "brand"]);
     Route::get("/demands", [ProductController::class, "demands"]);
+    Route::get("/filterProductsByPrice/{range}", [ProductController::class, "filterProductsByPrice"]);
     Route::get("/search/{keyword}", [ProductController::class, "search"]);
     Route::get("/{filter}/{order}", [ProductController::class, "filter"]);
 });

@@ -84,8 +84,8 @@ class CartService {
 
         // Loại bỏ sản phẩm không tồn tại trong db
         $cart = collect($cart)->map(function ($cartItem) {
-            $product = Product::find($cartItem['product_id']);
-
+            $product = app(ProductService::class)->getProductById($cartItem['product_id']);
+            
             if ($product) {
                 $cartItem['product'] = $product;
                 return $cartItem;
